@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Feature Requests Dashboard - Quilt</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen p-6">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                    Linear Feature Requests Dashboard
+                </h1>
+                <p class="text-gray-600">
+                    Automated customer feedback analysis from Feature Requests team
+                </p>
+                <p class="text-sm text-gray-500 mt-2">
+                    Last updated: November 07, 2025 at 11:57 PM UTC
+                </p>
+            </div>
+            
+            <!-- Summary Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="text-sm font-medium text-gray-600 mb-1">Total Tickets</div>
+                    <div class="text-3xl font-bold text-gray-900">102</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="text-sm font-medium text-gray-600 mb-1">Unique Customers</div>
+                    <div class="text-3xl font-bold text-gray-900">58</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="text-sm font-medium text-gray-600 mb-1">Feature Areas</div>
+                    <div class="text-3xl font-bold text-gray-900">10</div>
+                </div>
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <div class="text-sm font-medium text-gray-600 mb-1">Epics</div>
+                    <div class="text-3xl font-bold text-gray-900">23</div>
+                </div>
+            </div>
+            
+            <!-- Charts -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                <!-- Feature Area Chart -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                        Tickets by Feature Area
+                    </h2>
+                    <canvas id="featureAreaChart"></canvas>
+                </div>
+                
+                <!-- Survey Wave Chart -->
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                        Tickets by Survey Wave
+                    </h2>
+                    <canvas id="waveChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Top Epics -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    Top 10 Epics by Ticket Count
+                </h2>
+                <canvas id="epicChart" height="400"></canvas>
+            </div>
+            
+            <!-- Recent Tickets Table -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    Recent Tickets (Last 20)
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ticket</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Feature Area</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Wave</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-289</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Whole home controls discoverability</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Benji Jasik</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">All Things App (UX)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-288</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Color interpretation unclear on home screen</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Benji Jasik</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">All Things App (UX)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-287</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Light fade transition and low brightness UX</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Matt Harris</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">All Things App (UX)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 2</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-286</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Eco mode accessibility in Whole Home view</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">James Stewart</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Modes & Controls</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 2</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-285</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Heat/Cool mode request</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Asher Shaeffer</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Modes & Controls</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 2</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-284</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Dial smaller than expected</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Chuck</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Dial Interface</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-283</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Adaptive brightness for dial</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Matt Harris</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Dial Interface</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 2</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-282</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Scroll registering as tap</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">James Stewart</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Dial Interface</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 2</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-281</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Per-device temperature unit settings</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">James Stewart</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Dial Interface</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 2</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-280</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Apply vs Save flow confusion</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Sarah</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Schedules</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-279</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Time block structure vs calendar events</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Erin Reynolds</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Schedules</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 2</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-278</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Global schedule adjustments</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">James Stewart</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Schedules</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 2</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-276</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Light fade transition improvements</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Multiple customers (Wave 1 & Wave 2)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">All Things App (UX)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-275</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Carbon footprint tracking</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Multiple customers (Wave 1 & Wave 2)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Energy Usage</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-274</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Nighttime operation guidance/features</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Multiple customers (Wave 1 & Wave 2)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Modes & Controls</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-273</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Vacation/extended away mode</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Multiple customers (Wave 1 & Wave 2)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Auto-Away Pain Points</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-272</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Eco mode accessibility in Whole Home view</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Multiple customers (Wave 1 & Wave 2)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Modes & Controls</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-271</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Heat/Cool mode switching capability</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Multiple customers (Wave 1 & Wave 2)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Modes & Controls</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-270</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Adaptive brightness (auto-adjust)</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Multiple customers (Wave 1 & Wave 2)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Dial Interface</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <div class="text-sm font-medium text-blue-600">FEAT-269</div>
+                                    <div class="text-sm text-gray-500 truncate max-w-xs">Dial size expectations feedback</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Multiple customers (Wave 1 & Wave 2)</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Dial Interface</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">Wave 1</td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Download Section -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    Download Data
+                </h2>
+                <a href="data/customer_feedback.csv" 
+                   download
+                   class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
+                    📥 Download CSV
+                </a>
+                <a href="data/statistics.json" 
+                   download
+                   class="inline-block ml-4 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium">
+                    📊 Download Statistics (JSON)
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Feature Area Chart
+        const featureCtx = document.getElementById('featureAreaChart').getContext('2d');
+        new Chart(featureCtx, {
+            type: 'bar',
+            data: {
+                labels: ["Dial Interface", "Thermals & Comfort", "All Things App (UX)", "Smart Home Integration", "Modes & Controls", "Schedules", "Unknown", "Auto-Away Pain Points", "Energy Usage", "Hardware Requests"],
+                datasets: [{
+                    label: 'Ticket Count',
+                    data: [19, 13, 11, 10, 9, 9, 9, 8, 7, 7],
+                    backgroundColor: '#3b82f6'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+        
+        // Wave Chart
+        const waveCtx = document.getElementById('waveChart').getContext('2d');
+        new Chart(waveCtx, {
+            type: 'pie',
+            data: {
+                labels: ["Wave 1", "Wave 2", "Unknown"],
+                datasets: [{
+                    data: [24, 51, 27],
+                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true
+            }
+        });
+        
+        // Epic Chart
+        const epicCtx = document.getElementById('epicChart').getContext('2d');
+        new Chart(epicCtx, {
+            type: 'bar',
+            data: {
+                labels: ["FEAT-17: \u2602\ufe0f Thermals & Comfort [Thermware]", "FEAT-147: \u2602\ufe0f All things App", "FEAT-61: \u2602\ufe0f Smart Home Integrations", "FEAT-231: \u2602\ufe0f Modes & Controls", "FEAT-108: \u2602\ufe0f Schedules", "FEAT-126: \u2602\ufe0f Hardware Requests", "FEAT-117: \u2602\ufe0f Energy Usage", "FEAT-260: \u2602\ufe0f Auto-Away pain points", "FEAT-162: \u2602\ufe0f Dial features", "FEAT-164: \u2602\ufe0f Dial sensitivity issues"],
+                datasets: [{
+                    label: 'Ticket Count',
+                    data: [13, 11, 10, 9, 9, 7, 6, 6, 5, 5],
+                    backgroundColor: '#10b981'
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

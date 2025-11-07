@@ -1,0 +1,60 @@
+{
+  "total_tickets": 102,
+  "unique_customers": 58,
+  "by_feature_area": {
+    "Dial Interface": 19,
+    "Thermals & Comfort": 13,
+    "All Things App (UX)": 11,
+    "Smart Home Integration": 10,
+    "Modes & Controls": 9,
+    "Schedules": 9,
+    "Unknown": 9,
+    "Auto-Away Pain Points": 8,
+    "Energy Usage": 7,
+    "Hardware Requests": 7
+  },
+  "by_epic": {
+    "FEAT-17: \u2602\ufe0f Thermals & Comfort [Thermware]": 13,
+    "FEAT-147: \u2602\ufe0f All things App": 11,
+    "FEAT-61: \u2602\ufe0f Smart Home Integrations": 10,
+    "FEAT-231: \u2602\ufe0f Modes & Controls": 9,
+    "FEAT-108: \u2602\ufe0f Schedules": 9,
+    "FEAT-126: \u2602\ufe0f Hardware Requests": 7,
+    "FEAT-117: \u2602\ufe0f Energy Usage": 6,
+    "FEAT-260: \u2602\ufe0f Auto-Away pain points": 6,
+    "FEAT-162: \u2602\ufe0f Dial features": 5,
+    "FEAT-164: \u2602\ufe0f Dial sensitivity issues": 5,
+    "FEAT-165: \u2602\ufe0f Dial interface hard to use": 3,
+    "FEAT-263: \u2602\ufe0f Dial UI improvements": 2,
+    "FEAT-145: \u2602\ufe0f Notifications": 2,
+    "FEAT-146: \u2602\ufe0f Installation Experience": 2,
+    "FEAT-161: \u2602\ufe0f Dial advanced permissions": 2,
+    "FEAT-86: \u2602\ufe0f Local Control / Offline": 2,
+    "FEAT-160: \u2602\ufe0f Dial usability issues (misc)": 2,
+    "FEAT-232: \u2602\ufe0f Energy + Usage": 1,
+    "FEAT-261: \u2602\ufe0f Auto-Away feature expansion": 1,
+    "FEAT-6: \u2602\ufe0f Miscellaneous": 1,
+    "FEAT-96: Auto-Away behavior doesn't match expectations": 1,
+    "FEAT-10: \u2602\ufe0f Pairing": 1,
+    "FEAT-259: \u2602\ufe0f Home invites": 1
+  },
+  "by_wave": {
+    "Wave 1": 24,
+    "Wave 2": 51,
+    "Unknown": 27
+  },
+  "by_source_type": {
+    "CSAT Survey": 67,
+    "Unknown": 17,
+    "Usage Survey": 13,
+    "Beta Testing": 3,
+    "Direct Support": 2
+  },
+  "by_priority": {
+    "No priority": 88,
+    "Low": 10,
+    "High": 1,
+    "Medium": 3
+  },
+  "last_updated": "2025-11-07T23:57:42.152380"
+}
