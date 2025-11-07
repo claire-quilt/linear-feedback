@@ -87,7 +87,7 @@ def parse_ticket(ticket):
     """Parse a Linear ticket to extract structured customer feedback"""
     import re
     
-    description = ticket.get('description') or, ''
+    description = ticket.get('description') or ''
     
     # Extract structured fields using regex
     customer_match = re.search(r'\*\*Customer:\*\*\s*([^\n]+)', description)
