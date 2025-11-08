@@ -19,7 +19,7 @@
                     Automated customer feedback analysis from Feature Requests team
                 </p>
                 <p class="text-sm text-gray-500 mt-2">
-                    Last updated: November 08, 2025 at 02:16 AM UTC
+                    Last updated: November 08, 2025 at 02:20 AM UTC
                 </p>
             </div>
             
@@ -44,21 +44,13 @@
             </div>
             
             <!-- Charts -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 gap-6 mb-6">
                 <!-- Feature Area Chart -->
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">
                         Tickets by Feature Area
                     </h2>
                     <canvas id="featureAreaChart"></canvas>
-                </div>
-                
-                <!-- Survey Wave Chart -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                        Tickets by Survey Wave
-                    </h2>
-                    <canvas id="waveChart"></canvas>
                 </div>
             </div>
             
@@ -406,23 +398,6 @@
                 scales: {
                     y: { beginAtZero: true }
                 }
-            }
-        });
-        
-        // Wave Chart
-        const waveCtx = document.getElementById('waveChart').getContext('2d');
-        new Chart(waveCtx, {
-            type: 'pie',
-            data: {
-                labels: ["Wave 1", "Wave 2", "Unknown"],
-                datasets: [{
-                    data: [24, 51, 27],
-                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true
             }
         });
     </script>

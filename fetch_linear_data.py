@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+##!/usr/bin/env python3
 """
 Linear Feature Requests Dashboard Generator
 Fetches data from Linear API and generates analysis + dashboard
@@ -264,21 +264,13 @@ def generate_html_dashboard(tickets, stats):
             </div>
             
             <!-- Charts -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <div class="grid grid-cols-1 gap-6 mb-6">
                 <!-- Feature Area Chart -->
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">
                         Tickets by Feature Area
                     </h2>
                     <canvas id="featureAreaChart"></canvas>
-                </div>
-                
-                <!-- Survey Wave Chart -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                        Tickets by Survey Wave
-                    </h2>
-                    <canvas id="waveChart"></canvas>
                 </div>
             </div>
             
@@ -352,9 +344,6 @@ def generate_html_dashboard(tickets, stats):
     feature_areas = list(stats['by_feature_area'].keys())
     feature_counts = list(stats['by_feature_area'].values())
     
-    wave_labels = list(stats['by_wave'].keys())
-    wave_counts = list(stats['by_wave'].values())
-    
     html += f"""
                         </tbody>
                     </table>
@@ -402,23 +391,6 @@ def generate_html_dashboard(tickets, stats):
                 scales: {{
                     y: {{ beginAtZero: true }}
                 }}
-            }}
-        }});
-        
-        // Wave Chart
-        const waveCtx = document.getElementById('waveChart').getContext('2d');
-        new Chart(waveCtx, {{
-            type: 'pie',
-            data: {{
-                labels: {json.dumps(wave_labels)},
-                datasets: [{{
-                    data: {json.dumps(wave_counts)},
-                    backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444']
-                }}]
-            }},
-            options: {{
-                responsive: true,
-                maintainAspectRatio: true
             }}
         }});
     </script>
