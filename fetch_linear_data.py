@@ -282,12 +282,38 @@ def generate_html_dashboard(tickets, stats):
                 </div>
             </div>
             
-            <!-- Top Epics -->
+            <!-- Top Epics Table -->
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">
                     Top 10 Epics by Ticket Count
                 </h2>
-                <canvas id="epicChart" height="400"></canvas>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rank</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Epic</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ticket Count</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+"""
+    
+    # Add top 10 epics as table rows
+    top_epics = dict(list(stats['by_epic'].items())[:10])
+    for rank, (epic, count) in enumerate(top_epics.items(), 1):
+        html += f"""
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 text-sm font-medium text-gray-900">{rank}</td>
+                                <td class="px-4 py-3 text-sm text-gray-900">{epic}</td>
+                                <td class="px-4 py-3 text-sm font-bold text-blue-600">{count}</td>
+                            </tr>
+"""
+    
+    html += """
+                        </tbody>
+                    </table>
+                </div>
             </div>
             
             <!-- Recent Tickets Table -->
@@ -302,7 +328,6 @@ def generate_html_dashboard(tickets, stats):
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ticket</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Feature Area</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Wave</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
                             </tr>
                         </thead>
@@ -319,7 +344,6 @@ def generate_html_dashboard(tickets, stats):
                                 </td>
                                 <td class="px-4 py-3 text-sm text-gray-900">{ticket['customer'] or 'Unknown'}</td>
                                 <td class="px-4 py-3 text-sm text-gray-900">{ticket['feature_area']}</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">{ticket['wave']}</td>
                                 <td class="px-4 py-3 text-sm text-gray-500">{created_date}</td>
                             </tr>
 """
@@ -330,10 +354,6 @@ def generate_html_dashboard(tickets, stats):
     
     wave_labels = list(stats['by_wave'].keys())
     wave_counts = list(stats['by_wave'].values())
-    
-    top_epics = dict(list(stats['by_epic'].items())[:10])
-    epic_labels = list(top_epics.keys())
-    epic_counts = list(top_epics.values())
     
     html += f"""
                         </tbody>
@@ -399,31 +419,6 @@ def generate_html_dashboard(tickets, stats):
             options: {{
                 responsive: true,
                 maintainAspectRatio: true
-            }}
-        }});
-        
-        // Epic Chart
-        const epicCtx = document.getElementById('epicChart').getContext('2d');
-        new Chart(epicCtx, {{
-            type: 'bar',
-            data: {{
-                labels: {json.dumps(epic_labels)},
-                datasets: [{{
-                    label: 'Ticket Count',
-                    data: {json.dumps(epic_counts)},
-                    backgroundColor: '#10b981'
-                }}]
-            }},
-            options: {{
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {{
-                    legend: {{ display: false }}
-                }},
-                scales: {{
-                    x: {{ beginAtZero: true }}
-                }}
             }}
         }});
     </script>
