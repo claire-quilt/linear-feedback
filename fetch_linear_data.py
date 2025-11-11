@@ -26,9 +26,6 @@ query($teamId: String!) {
         name
         description
         icon
-        state {
-          name
-        }
       }
     }
   }
