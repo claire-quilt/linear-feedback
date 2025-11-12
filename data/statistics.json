@@ -1,10 +1,10 @@
 {
-  "total_tickets": 93,
+  "total_tickets": 92,
   "unique_customers": 55,
   "by_project": {
-    "Thermals & Comfort [Thermware]": 18,
+    "Thermals & Comfort": 18,
     "All things Dial": 15,
-    "All things App": 11,
+    "All things App": 10,
     "Schedules": 10,
     "Smart Home Integrations": 10,
     "Hardware Requests": 8,
@@ -15,7 +15,7 @@
   },
   "by_feature_area": {
     "All things Dial": 15,
-    "Thermals & Comfort [Thermware]": 13,
+    "Thermals & Comfort": 13,
     "Smart Home Integrations": 10,
     "All things App": 9,
     "Schedules": 9,
@@ -23,7 +23,7 @@
     "Auto-Away": 8,
     "Modes & Controls": 7,
     "Energy + Usage": 7,
-    "Lighting": 4,
+    "Lighting": 3,
     "Device management & operation": 3
   },
   "by_epic": {
@@ -32,7 +32,7 @@
     "FEAT-117: \u2602\ufe0f Energy Usage": 6,
     "FEAT-231: \u2602\ufe0f Modes & Controls": 5,
     "FEAT-164: \u2602\ufe0f Dial sensitivity issues": 5,
-    "FEAT-258: \u2602\ufe0f Lighting": 4,
+    "FEAT-258: \u2602\ufe0f Lighting": 3,
     "FEAT-162: \u2602\ufe0f Dial features": 3,
     "FEAT-165: \u2602\ufe0f Dial interface hard to use": 3,
     "FEAT-161: \u2602\ufe0f Dial advanced permissions": 2,
@@ -43,12 +43,12 @@
     "FEAT-259: \u2602\ufe0f Home invites": 1
   },
   "by_wave": {
-    "Wave 1": 18,
+    "Wave 1": 17,
     "Wave 2": 48
   },
   "by_source_type": {
     "CSAT Survey": 63,
-    "Early Adopter Research": 4,
+    "Early Adopter Research": 3,
     "Usage Survey": 13,
     "Unknown": 4,
     "Beta Testing": 3,
@@ -56,10 +56,10 @@
     "Direct Support": 2
   },
   "by_priority": {
-    "No priority": 79,
+    "No priority": 78,
     "Low": 10,
     "High": 1,
     "Medium": 3
   },
-  "last_updated": "2025-11-11T23:34:36.188389"
+  "last_updated": "2025-11-12T09:15:15.263532"
 }
