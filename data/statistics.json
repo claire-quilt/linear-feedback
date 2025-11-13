@@ -15,23 +15,24 @@
   },
   "by_feature_area": {
     "All things Dial": 15,
-    "Thermals & Comfort": 13,
+    "Modes & Controls": 11,
     "Smart Home Integrations": 10,
     "All things App": 9,
     "Schedules": 9,
+    "Thermals & Comfort": 9,
     "Hardware Requests": 8,
     "Auto-Away": 8,
-    "Modes & Controls": 7,
     "Energy + Usage": 7,
     "Lighting": 3,
     "Device management & operation": 3
   },
   "by_epic": {
-    "No Epic": 51,
+    "No Epic": 47,
     "FEAT-260: \u2602\ufe0f Auto-Away pain points": 7,
     "FEAT-117: \u2602\ufe0f Energy Usage": 6,
     "FEAT-231: \u2602\ufe0f Modes & Controls": 5,
     "FEAT-164: \u2602\ufe0f Dial sensitivity issues": 5,
+    "FEAT-296: \u2602\ufe0f Fan speed control": 4,
     "FEAT-258: \u2602\ufe0f Lighting": 3,
     "FEAT-162: \u2602\ufe0f Dial features": 3,
     "FEAT-165: \u2602\ufe0f Dial interface hard to use": 3,
@@ -61,5 +62,5 @@
     "High": 1,
     "Medium": 3
   },
-  "last_updated": "2025-11-12T09:15:15.263532"
+  "last_updated": "2025-11-13T09:15:30.046500"
 }
