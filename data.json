@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-11-13T22:24:35.835930",
+  "lastUpdated": "2025-11-14T09:14:10.979178",
   "projects": [
     {
       "id": "0aac74b2-ea29-4e73-96f4-b17a52dcb7e8",
@@ -141,13 +141,13 @@
       "description": "",
       "url": "https://linear.app/quiltair/issue/FEAT-316",
       "createdAt": "2025-11-13T20:27:03.957Z",
-      "updatedAt": "2025-11-13T22:15:33.981Z",
+      "updatedAt": "2025-11-13T22:27:25.040Z",
       "customer": "Customer via Ruth",
       "wave": null,
       "project": "Hardware Requests",
       "projectId": null,
       "parentId": null,
-      "state": "Todo",
+      "state": "Backlog",
       "labels": []
     },
     {
@@ -216,13 +216,13 @@
       "description": "",
       "url": "https://linear.app/quiltair/issue/FEAT-310",
       "createdAt": "2025-11-13T20:14:32.292Z",
-      "updatedAt": "2025-11-13T22:12:45.739Z",
+      "updatedAt": "2025-11-13T22:27:25.003Z",
       "customer": "Matthew Knoll (internal)",
       "wave": null,
       "project": "All things App",
       "projectId": null,
       "parentId": null,
-      "state": "Todo",
+      "state": "Backlog",
       "labels": []
     },
     {
@@ -261,13 +261,13 @@
       "description": "",
       "url": "https://linear.app/quiltair/issue/FEAT-300",
       "createdAt": "2025-11-13T18:38:40.845Z",
-      "updatedAt": "2025-11-13T18:38:49.104Z",
+      "updatedAt": "2025-11-13T22:27:24.964Z",
       "customer": null,
       "wave": null,
       "project": "Thermals & Comfort",
       "projectId": null,
       "parentId": "d3f84793-f8d3-4786-b519-ce7d07e270e4",
-      "state": "Todo",
+      "state": "Backlog",
       "labels": []
     },
     {
@@ -2631,7 +2631,7 @@
       "description": "",
       "url": "https://linear.app/quiltair/issue/FEAT-233",
       "createdAt": "2024-10-29T18:34:23.859Z",
-      "updatedAt": "2025-11-13T18:46:03.767Z",
+      "updatedAt": "2025-11-13T22:26:25.352Z",
       "customer": null,
       "wave": null,
       "project": "Thermals & Comfort",

@@ -59,10 +59,10 @@
     "Direct Support": 2
   },
   "by_priority": {
-    "Low": 20,
+    "Low": 18,
     "Medium": 4,
-    "No priority": 79,
+    "No priority": 81,
     "High": 1
   },
-  "last_updated": "2025-11-13T22:24:35.838987"
+  "last_updated": "2025-11-14T09:14:10.982226"
 }
