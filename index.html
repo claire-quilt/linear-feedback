@@ -6,6 +6,22 @@
     <title>Linear Feature Requests Dashboard - Quilt</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        .priority-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: #6b7280;
+            font-family: monospace;
+        }
+        .priority-urgent {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
     <div class="min-h-screen p-6">
@@ -19,12 +35,12 @@
                     Automated customer feedback analysis from Feature Requests team
                 </p>
                 <p class="text-sm text-gray-500 mt-2">
-                    Last updated: November 14, 2025 at 09:14 AM UTC
+                    Last updated: November 15, 2025 at 12:32 AM UTC
                 </p>
             </div>
             
             <!-- Summary Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <div class="text-sm font-medium text-gray-600 mb-1">Total Tickets</div>
                     <div class="text-3xl font-bold text-gray-900">104</div>
@@ -34,213 +50,63 @@
                     <div class="text-3xl font-bold text-gray-900">67</div>
                 </div>
                 <div class="bg-white rounded-lg shadow-sm p-6">
-                    <div class="text-sm font-medium text-gray-600 mb-1">Projects</div>
-                    <div class="text-3xl font-bold text-gray-900">11</div>
-                </div>
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <div class="text-sm font-medium text-gray-600 mb-1">Epics</div>
-                    <div class="text-3xl font-bold text-gray-900">15</div>
+                    <div class="text-sm font-medium text-gray-600 mb-1">Feature Areas</div>
+                    <div class="text-3xl font-bold text-gray-900">12</div>
                 </div>
             </div>
             
-            <!-- Charts Row -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <!-- Projects Chart -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                        Tickets by Project
-                    </h2>
-                    <canvas id="projectChart"></canvas>
+            <!-- Section 1: Trends -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    Feedback Trends
+                </h2>
+                
+                <!-- Filters -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Time Period</label>
+                        <select id="timeFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                            <option value="all">All time</option>
+                            <option value="30">Last 30 days</option>
+                            <option value="60">Last 60 days</option>
+                            <option value="90">Last 90 days</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Source</label>
+                        <select id="sourceFilter" multiple size="6" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                            <option value="all" selected>All sources</option>
+                            <option value="zendesk">Zendesk</option>
+                            <option value="CSAT">CSAT</option>
+                            <option value="sales">Sales</option>
+                            <option value="partner success">Partner Success</option>
+                            <option value="other">Other</option>
+                            <option value="unlabeled">Unlabeled</option>
+                        </select>
+                    </div>
                 </div>
                 
-                <!-- Feature Area Chart -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                        Tickets by Feature Area
-                    </h2>
+                <!-- Horizontal Bar Chart -->
+                <div style="height: 500px;">
                     <canvas id="featureAreaChart"></canvas>
                 </div>
             </div>
             
-            <!-- Top Projects & Epics Tables -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <!-- Top Projects -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                        Top Projects by Ticket Count
-                    </h2>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rank</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Count</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">1</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900">Thermals & Comfort</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">23</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">2</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900">All things Dial</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">15</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">3</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900">Hardware Requests</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">12</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">4</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900">All things App</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">11</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">5</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900">Schedules</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">10</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">6</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900">Smart Home Integrations</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">10</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">7</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900">Auto-Away</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">8</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">8</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900">Energy + Usage</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">7</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">9</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900">Device management & operation</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">5</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">10</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900">Miscellaneous</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">2</td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <!-- Top Epics -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                        Top Epics by Ticket Count
-                    </h2>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rank</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Epic</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Count</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">1</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900 truncate max-w-xs">No Epic</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">58</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">2</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900 truncate max-w-xs">FEAT-260: ☂️ Auto-Away pain points</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">7</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">3</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900 truncate max-w-xs">FEAT-117: ☂️ Energy Usage</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">6</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">4</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900 truncate max-w-xs">FEAT-231: ☂️ Modes & Controls</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">5</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">5</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900 truncate max-w-xs">FEAT-164: ☂️ Dial sensitivity issues</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">5</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">6</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900 truncate max-w-xs">FEAT-258: ☂️ Lighting</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">4</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">7</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900 truncate max-w-xs">FEAT-296: ☂️ Fan speed control</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">4</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">8</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900 truncate max-w-xs">FEAT-162: ☂️ Dial features</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">3</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">9</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900 truncate max-w-xs">FEAT-165: ☂️ Dial interface hard to use</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">3</td>
-                                </tr>
-
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">10</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900 truncate max-w-xs">FEAT-161: ☂️ Dial advanced permissions</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">2</td>
-                                </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Recent Tickets Table -->
+            <!-- Section 2: Recent Tickets -->
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                    Recent Tickets (Last 20)
+                    Recent Tickets
                 </h2>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ticket</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Wave</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Source</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -250,12 +116,17 @@
                                     <a href="https://linear.app/quiltair/issue/FEAT-323" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         FEAT-323
                                     </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Low ambient cooling capability (winter cooling for special use cases)</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Low ambient cooling capability (winter cooling for special use cases)</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Stellar Air in Colorado via Peter Labes</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Thermals & Comfort</td>
-                                <td class="px-4 py-3 text-sm">—</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▯▯</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
                             </tr>
 
                             <tr class="hover:bg-gray-50">
@@ -263,12 +134,17 @@
                                     <a href="https://linear.app/quiltair/issue/FEAT-320" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         FEAT-320
                                     </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Integrated disconnect switch in IDU for code compliance (aesthetic improvement)</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Integrated disconnect switch in IDU for code compliance (aesthetic improvement)</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Partner via Edward Hu (LA County requirement)</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Hardware Requests</td>
-                                <td class="px-4 py-3 text-sm">—</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Hardware Requests</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▯▯</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
                             </tr>
 
                             <tr class="hover:bg-gray-50">
@@ -276,12 +152,17 @@
                                     <a href="https://linear.app/quiltair/issue/FEAT-319" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         FEAT-319
                                     </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Dehumidification mode with minimal cooling</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Dehumidification mode with minimal cooling</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Customer in SF Sunset via Miles Newell</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Thermals & Comfort</td>
-                                <td class="px-4 py-3 text-sm">—</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▯▯</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
                             </tr>
 
                             <tr class="hover:bg-gray-50">
@@ -289,12 +170,17 @@
                                     <a href="https://linear.app/quiltair/issue/FEAT-318" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         FEAT-318
                                     </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Cold climate performance case study for partner sales enablement</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Cold climate performance case study for partner sales enablement</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Partner via Taylor Roche</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Partner Tooling</td>
-                                <td class="px-4 py-3 text-sm">—</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Partner Tooling</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▮▯</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
                             </tr>
 
                             <tr class="hover:bg-gray-50">
@@ -302,12 +188,17 @@
                                     <a href="https://linear.app/quiltair/issue/FEAT-316" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         FEAT-316
                                     </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Off-grid / solar battery integration capability</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Off-grid / solar battery integration capability</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Customer via Ruth</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Hardware Requests</td>
-                                <td class="px-4 py-3 text-sm">—</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Hardware Requests</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
+                                <td class="px-4 py-3"><span class="priority-icon">---</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
                             </tr>
 
                             <tr class="hover:bg-gray-50">
@@ -315,12 +206,17 @@
                                     <a href="https://linear.app/quiltair/issue/FEAT-315" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         FEAT-315
                                     </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Dual fuel / backup heat integration with external control protocols</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Dual fuel / backup heat integration with external control protocols</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Edward Hu (inquiry from Crested Butte / Telluride)</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Thermals & Comfort</td>
-                                <td class="px-4 py-3 text-sm">—</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▯▯</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
                             </tr>
 
                             <tr class="hover:bg-gray-50">
@@ -328,12 +224,17 @@
                                     <a href="https://linear.app/quiltair/issue/FEAT-314" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         FEAT-314
                                     </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Internal pan switch in IDU for condensate overflow protection</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Internal pan switch in IDU for condensate overflow protection</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Customer via Molly</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Hardware Requests</td>
-                                <td class="px-4 py-3 text-sm">—</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Hardware Requests</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▯▯</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
                             </tr>
 
                             <tr class="hover:bg-gray-50">
@@ -341,12 +242,17 @@
                                     <a href="https://linear.app/quiltair/issue/FEAT-313" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         FEAT-313
                                     </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Low wall mount capability for IDU (below 6ft minimum)</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Low wall mount capability for IDU (below 6ft minimum)</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Prospect via Molly</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Hardware Requests</td>
-                                <td class="px-4 py-3 text-sm">—</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Hardware Requests</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▯▯</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
                             </tr>
 
                             <tr class="hover:bg-gray-50">
@@ -354,12 +260,17 @@
                                     <a href="https://linear.app/quiltair/issue/FEAT-311" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         FEAT-311
                                     </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Whole home temperature control should selectively activate only units that need conditioning</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Whole home temperature control should selectively activate only units that need conditioning</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Alex Broekhof (internal)</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Thermals & Comfort</td>
-                                <td class="px-4 py-3 text-sm">—</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▯▯</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
                             </tr>
 
                             <tr class="hover:bg-gray-50">
@@ -367,143 +278,41 @@
                                     <a href="https://linear.app/quiltair/issue/FEAT-310" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         FEAT-310
                                     </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Seasonal UI adaptation - Hide or de-emphasize unused mode in winter/summer</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Seasonal UI adaptation - Hide or de-emphasize unused mode in winter/summer</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Matthew Knoll (internal)</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">All things App</td>
-                                <td class="px-4 py-3 text-sm">—</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">All things App</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
+                                <td class="px-4 py-3"><span class="priority-icon">---</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
                             </tr>
 
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-309" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-309
-                                    </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Whole-home mode control missing (can only set temperature, not heat/cool mode)</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Sonia (Paul Lambert's wife)</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Thermals & Comfort</td>
-                                <td class="px-4 py-3 text-sm">—</td>
-                                <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Section 3: Priorities by Status -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    Priorities by Status
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Source</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                             </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-301" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-301
-                                    </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Wake-up light scheduling for toddler</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Shayle</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Miscellaneous</td>
-                                <td class="px-4 py-3 text-sm">—</td>
-                                <td class="px-4 py-3 text-sm text-gray-500">Nov 13, 2025</td>
-                            </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-289" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-289
-                                    </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Whole home controls discoverability</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Benji Jasik</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">All things App</td>
-                                <td class="px-4 py-3 text-sm"><span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">Wave 1</span></td>
-                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
-                            </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-287" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-287
-                                    </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Light fade transition and low brightness UX</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Matt Harris</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">All things App</td>
-                                <td class="px-4 py-3 text-sm"><span class="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800">Wave 2</span></td>
-                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
-                            </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-286" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-286
-                                    </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Eco mode accessibility in Whole Home view</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">James Stewart</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Thermals & Comfort</td>
-                                <td class="px-4 py-3 text-sm"><span class="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800">Wave 2</span></td>
-                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
-                            </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-284" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-284
-                                    </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Dial smaller than expected</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Chuck</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Hardware Requests</td>
-                                <td class="px-4 py-3 text-sm"><span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">Wave 1</span></td>
-                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
-                            </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-283" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-283
-                                    </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Adaptive brightness for dial</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Matt Harris</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">All things Dial</td>
-                                <td class="px-4 py-3 text-sm"><span class="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800">Wave 2</span></td>
-                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
-                            </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-282" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-282
-                                    </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Scroll registering as tap</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">James Stewart</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">All things Dial</td>
-                                <td class="px-4 py-3 text-sm"><span class="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800">Wave 2</span></td>
-                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
-                            </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-281" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-281
-                                    </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Per-device temperature unit settings</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">James Stewart</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">All things Dial</td>
-                                <td class="px-4 py-3 text-sm"><span class="px-2 py-1 text-xs font-medium rounded bg-green-100 text-green-800">Wave 2</span></td>
-                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
-                            </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-280" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-280
-                                    </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">Apply vs Save flow confusion</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Sarah</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">Schedules</td>
-                                <td class="px-4 py-3 text-sm"><span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">Wave 1</span></td>
-                                <td class="px-4 py-3 text-sm text-gray-500">Nov 07, 2025</td>
-                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
 
                         </tbody>
                     </table>
@@ -537,53 +346,94 @@
     </div>
     
     <script>
-        // Project Chart
-        const projectCtx = document.getElementById('projectChart').getContext('2d');
-        new Chart(projectCtx, {
-            type: 'bar',
-            data: {
-                labels: ["Thermals & Comfort", "All things Dial", "Hardware Requests", "All things App", "Schedules", "Smart Home Integrations", "Auto-Away", "Energy + Usage", "Device management & operation", "Miscellaneous"],
-                datasets: [{
-                    label: 'Ticket Count',
-                    data: [23, 15, 12, 11, 10, 10, 8, 7, 5, 2],
-                    backgroundColor: '#3b82f6'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: { beginAtZero: true }
-                }
-            }
-        });
+        // Load full data for filtering
+        let allIssues = [];
         
-        // Feature Area Chart
-        const featureCtx = document.getElementById('featureAreaChart').getContext('2d');
-        new Chart(featureCtx, {
-            type: 'bar',
-            data: {
-                labels: ["All things Dial", "Thermals & Comfort", "Hardware Requests", "Modes & Controls", "All things App", "Smart Home Integrations", "Schedules", "Auto-Away", "Energy + Usage", "Lighting"],
-                datasets: [{
-                    label: 'Ticket Count',
-                    data: [15, 14, 12, 11, 10, 10, 9, 8, 7, 4],
-                    backgroundColor: '#10b981'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: { beginAtZero: true }
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {
+                allIssues = data.issues;
+                updateChart();
+            });
+        
+        let featureChart = null;
+        
+        function updateChart() {
+            const timeFilter = document.getElementById('timeFilter').value;
+            const sourceFilter = Array.from(document.getElementById('sourceFilter').selectedOptions).map(opt => opt.value);
+            
+            // Filter issues based on selections
+            let filteredIssues = allIssues.filter(issue => {
+                // Time filter
+                if (timeFilter !== 'all') {
+                    const daysAgo = parseInt(timeFilter);
+                    const cutoffDate = new Date();
+                    cutoffDate.setDate(cutoffDate.getDate() - daysAgo);
+                    const createdDate = new Date(issue.createdAt);
+                    if (createdDate < cutoffDate) return false;
                 }
+                
+                // Source filter
+                if (!sourceFilter.includes('all') && sourceFilter.length > 0) {
+                    if (!sourceFilter.includes(issue.sourceLabel)) return false;
+                }
+                
+                return true;
+            });
+            
+            // Count by feature area
+            const featureAreaCounts = {};
+            filteredIssues.forEach(issue => {
+                const area = issue.featureArea || 'Unknown';
+                featureAreaCounts[area] = (featureAreaCounts[area] || 0) + 1;
+            });
+            
+            // Sort by count descending
+            const sortedAreas = Object.entries(featureAreaCounts)
+                .sort((a, b) => b[1] - a[1]);
+            
+            const labels = sortedAreas.map(([area, _]) => area);
+            const counts = sortedAreas.map(([_, count]) => count);
+            
+            // Update or create chart
+            const ctx = document.getElementById('featureAreaChart').getContext('2d');
+            
+            if (featureChart) {
+                featureChart.destroy();
             }
-        });
+            
+            featureChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Ticket Count',
+                        data: counts,
+                        backgroundColor: '#10b981'
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: { 
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Add event listeners
+        document.getElementById('timeFilter').addEventListener('change', updateChart);
+        document.getElementById('sourceFilter').addEventListener('change', updateChart);
     </script>
 </body>
 </html>

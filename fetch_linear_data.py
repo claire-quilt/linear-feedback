@@ -8,7 +8,7 @@ Updated to support Project → Epic → Issue hierarchy
 import os
 import json
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 import csv
 
 # Configuration
@@ -61,6 +61,7 @@ query($teamId: String!) {
         }
         createdAt
         updatedAt
+        completedAt
         creator {
           name
           email
@@ -144,6 +145,29 @@ def fetch_linear_issues():
     print(f"✅ Found {len(issues)} issues ({len(issues) - len(filtered_issues)} converted epics filtered out)")
     return filtered_issues
 
+def get_source_label(labels):
+    """Extract source label from ticket labels"""
+    source_labels = {'zendesk', 'csat', 'sales', 'partner success', 'other', 'unlabeled'}
+    
+    if not labels:
+        return 'unlabeled'
+    
+    label_names = [label['name'].lower() for label in labels]
+    
+    for label in label_names:
+        if 'zendesk' in label:
+            return 'zendesk'
+        elif 'csat' in label:
+            return 'CSAT'
+        elif 'sales' in label:
+            return 'sales'
+        elif 'partner success' in label or 'partner-success' in label:
+            return 'partner success'
+        elif any(keyword in label for keyword in ['email', 'phone', 'slack', 'in person', 'in-person']):
+            return 'other'
+    
+    return 'unlabeled'
+
 def parse_ticket(ticket, all_issues):
     """Parse a Linear ticket to extract structured customer feedback"""
     import re
@@ -211,11 +235,11 @@ def parse_ticket(ticket, all_issues):
         if 'smart home' in parent_lower or 'homekit' in parent_lower or 'integration' in parent_lower:
             feature_area = 'Smart Home Integrations'
         elif 'thermal' in parent_lower or 'comfort' in parent_lower or 'thermware' in parent_lower:
-            feature_area = 'Thermals & Comfort [Thermware]'
+            feature_area = 'Thermals & Comfort'
         elif 'schedule' in parent_lower:
             feature_area = 'Schedules'
         elif 'app' in parent_lower and 'ux' in parent_lower:
-            feature_area = 'All Things App (UX)'
+            feature_area = 'All things App'
         elif 'hardware' in parent_lower:
             feature_area = 'Hardware Requests'
         elif 'dial' in parent_lower:
@@ -233,6 +257,12 @@ def parse_ticket(ticket, all_issues):
         elif 'partner' in parent_lower or 'tooling' in parent_lower:
             feature_area = 'Partner Tooling'
     
+    # Get source label
+    source_label = get_source_label(ticket.get('labels', {}).get('nodes', []))
+    
+    # Get priority value (0-4)
+    priority_value = ticket.get('priority', 0)
+    
     return {
         'ticket_id': ticket['identifier'],
         'title': ticket['title'],
@@ -245,11 +275,15 @@ def parse_ticket(ticket, all_issues):
         'wave': wave,
         'source_type': source_type,
         'source_detail': source,
+        'source_label': source_label,
         'priority': ticket.get('priorityLabel', 'No Priority'),
+        'priority_value': priority_value,
         'quote': quote[:500] if quote else '',  # Truncate long quotes
         'status': ticket['state']['name'],
+        'state_type': ticket['state']['type'],
         'created_at': ticket['createdAt'],
         'updated_at': ticket['updatedAt'],
+        'completed_at': ticket.get('completedAt'),
         'has_customer_feedback': customer is not None,
         'url': f"https://linear.app/quiltair/issue/{ticket['identifier']}"
     }
@@ -266,7 +300,7 @@ def generate_csv(tickets, output_file='data/customer_feedback.csv'):
     with open(output_file, 'w', newline='', encoding='utf-8') as f:
         fieldnames = [
             'ticket_id', 'title', 'project', 'epic', 'epic_id', 'feature_area', 
-            'customer', 'wave', 'source_type', 'source_detail', 'priority', 
+            'customer', 'wave', 'source_type', 'source_detail', 'source_label', 'priority', 
             'quote', 'status', 'created_at', 'updated_at', 'url'
         ]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -275,7 +309,7 @@ def generate_csv(tickets, output_file='data/customer_feedback.csv'):
         for ticket in customer_tickets:
             # Remove fields not needed in CSV
             csv_ticket = {k: v for k, v in ticket.items() 
-                         if k != 'has_customer_feedback' and k != 'parent_id'}
+                         if k in fieldnames}
             writer.writerow(csv_ticket)
     
     print(f"✅ CSV saved to {output_file}")
@@ -300,17 +334,19 @@ def generate_json(tickets, projects, output_file='data.json'):
             {
                 'id': t['ticket_id'],
                 'title': t['title'],
-                'description': '',  # Not included to reduce file size
                 'url': t['url'],
                 'createdAt': t['created_at'],
                 'updatedAt': t['updated_at'],
+                'completedAt': t.get('completed_at'),
                 'customer': t['customer'],
                 'wave': t['wave'],
                 'project': t['project'],
-                'projectId': None,  # Could be added if needed
-                'parentId': t['parent_id'],
+                'featureArea': t['feature_area'],
+                'sourceLabel': t['source_label'],
+                'priority': t['priority'],
+                'priorityValue': t['priority_value'],
                 'state': t['status'],
-                'labels': []  # Could be populated if needed
+                'stateType': t['state_type']
             }
             for t in tickets
         ]
@@ -330,9 +366,8 @@ def generate_statistics(tickets):
     stats = {
         'total_tickets': len(tickets),
         'unique_customers': len(set(t['customer'] for t in tickets if t['customer'])),
-        'by_project': dict(Counter(t['project'] for t in tickets)),
         'by_feature_area': dict(Counter(t['feature_area'] for t in tickets)),
-        'by_epic': dict(Counter(t['epic'] for t in tickets)),
+        'by_source_label': dict(Counter(t['source_label'] for t in tickets)),
         'by_wave': dict(Counter(t['wave'] for t in tickets if t['wave'])),
         'by_source_type': dict(Counter(t['source_type'] for t in tickets)),
         'by_priority': dict(Counter(t['priority'] for t in tickets)),
@@ -340,12 +375,8 @@ def generate_statistics(tickets):
     }
     
     # Sort by count
-    stats['by_project'] = dict(sorted(stats['by_project'].items(), 
-                                     key=lambda x: x[1], reverse=True))
     stats['by_feature_area'] = dict(sorted(stats['by_feature_area'].items(), 
                                            key=lambda x: x[1], reverse=True))
-    stats['by_epic'] = dict(sorted(stats['by_epic'].items(), 
-                                   key=lambda x: x[1], reverse=True))
     
     # Save statistics
     os.makedirs('data', exist_ok=True)
@@ -356,11 +387,44 @@ def generate_statistics(tickets):
     return stats
 
 def generate_html_dashboard(tickets, stats):
-    """Generate HTML dashboard with project-first hierarchy"""
+    """Generate HTML dashboard with improved layout"""
     print("🎨 Generating HTML dashboard...")
     
-    # Sort tickets by creation date (newest first)
-    recent_tickets = sorted(tickets, key=lambda x: x['created_at'], reverse=True)[:20]
+    # Sort tickets by creation date (newest first) for recent tickets section
+    recent_tickets = sorted(tickets, key=lambda x: x['created_at'], reverse=True)[:10]
+    
+    # Filter tickets for priorities section
+    # Include: In Progress, To Do, In Review, and Done (if completed within last 7 days)
+    active_statuses = {'In Progress', 'Todo', 'In Review'}
+    seven_days_ago = datetime.now() - timedelta(days=7)
+    
+    priority_tickets = []
+    for ticket in tickets:
+        status = ticket['status']
+        if status in active_statuses or (status == 'In Progress' or status.lower() == 'done'):
+            # Check if Done ticket is within 7 days
+            if status.lower() == 'done' and ticket.get('completed_at'):
+                completed_date = datetime.fromisoformat(ticket['completed_at'].replace('Z', '+00:00'))
+                if completed_date >= seven_days_ago:
+                    priority_tickets.append(ticket)
+            elif status.lower() != 'done':
+                priority_tickets.append(ticket)
+    
+    # Sort priority tickets by status order, then by updated date
+    status_order = {'In Progress': 0, 'Todo': 1, 'In Review': 2, 'Done': 3}
+    priority_tickets.sort(
+        key=lambda x: (
+            status_order.get(x['status'], 999),
+            -datetime.fromisoformat(x['updated_at'].replace('Z', '+00:00')).timestamp()
+        )
+    )
+    
+    # Get all feature areas for the chart (including zeros)
+    all_feature_areas = list(stats['by_feature_area'].keys())
+    feature_counts = list(stats['by_feature_area'].values())
+    
+    # Get all unique source labels
+    all_source_labels = list(set(t['source_label'] for t in tickets))
     
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -370,6 +434,22 @@ def generate_html_dashboard(tickets, stats):
     <title>Linear Feature Requests Dashboard - Quilt</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        .priority-icon {{
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+            color: #6b7280;
+            font-family: monospace;
+        }}
+        .priority-urgent {{
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }}
+    </style>
 </head>
 <body class="bg-gray-50">
     <div class="min-h-screen p-6">
@@ -388,7 +468,7 @@ def generate_html_dashboard(tickets, stats):
             </div>
             
             <!-- Summary Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <div class="text-sm font-medium text-gray-600 mb-1">Total Tickets</div>
                     <div class="text-3xl font-bold text-gray-900">{stats['total_tickets']}</div>
@@ -398,119 +478,63 @@ def generate_html_dashboard(tickets, stats):
                     <div class="text-3xl font-bold text-gray-900">{stats['unique_customers']}</div>
                 </div>
                 <div class="bg-white rounded-lg shadow-sm p-6">
-                    <div class="text-sm font-medium text-gray-600 mb-1">Projects</div>
-                    <div class="text-3xl font-bold text-gray-900">{len(stats['by_project'])}</div>
-                </div>
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <div class="text-sm font-medium text-gray-600 mb-1">Epics</div>
-                    <div class="text-3xl font-bold text-gray-900">{len(stats['by_epic'])}</div>
+                    <div class="text-sm font-medium text-gray-600 mb-1">Feature Areas</div>
+                    <div class="text-3xl font-bold text-gray-900">{len(stats['by_feature_area'])}</div>
                 </div>
             </div>
             
-            <!-- Charts Row -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <!-- Projects Chart -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                        Tickets by Project
-                    </h2>
-                    <canvas id="projectChart"></canvas>
+            <!-- Section 1: Trends -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    Feedback Trends
+                </h2>
+                
+                <!-- Filters -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Time Period</label>
+                        <select id="timeFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                            <option value="all">All time</option>
+                            <option value="30">Last 30 days</option>
+                            <option value="60">Last 60 days</option>
+                            <option value="90">Last 90 days</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Source</label>
+                        <select id="sourceFilter" multiple size="6" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                            <option value="all" selected>All sources</option>
+                            <option value="zendesk">Zendesk</option>
+                            <option value="CSAT">CSAT</option>
+                            <option value="sales">Sales</option>
+                            <option value="partner success">Partner Success</option>
+                            <option value="other">Other</option>
+                            <option value="unlabeled">Unlabeled</option>
+                        </select>
+                    </div>
                 </div>
                 
-                <!-- Feature Area Chart -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                        Tickets by Feature Area
-                    </h2>
+                <!-- Horizontal Bar Chart -->
+                <div style="height: 500px;">
                     <canvas id="featureAreaChart"></canvas>
                 </div>
             </div>
             
-            <!-- Top Projects & Epics Tables -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <!-- Top Projects -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                        Top Projects by Ticket Count
-                    </h2>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rank</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Count</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-"""
-    
-    # Add top projects
-    top_projects = dict(list(stats['by_project'].items())[:10])
-    for rank, (project, count) in enumerate(top_projects.items(), 1):
-        html += f"""
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">{rank}</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900">{project}</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">{count}</td>
-                                </tr>
-"""
-    
-    html += """
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <!-- Top Epics -->
-                <div class="bg-white rounded-lg shadow-sm p-6">
-                    <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                        Top Epics by Ticket Count
-                    </h2>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead>
-                                <tr>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rank</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Epic</th>
-                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Count</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-"""
-    
-    # Add top 10 epics
-    top_epics = dict(list(stats['by_epic'].items())[:10])
-    for rank, (epic, count) in enumerate(top_epics.items(), 1):
-        html += f"""
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-3 text-sm font-medium text-gray-900">{rank}</td>
-                                    <td class="px-4 py-3 text-sm text-gray-900 truncate max-w-xs">{epic}</td>
-                                    <td class="px-4 py-3 text-sm font-bold text-blue-600">{count}</td>
-                                </tr>
-"""
-    
-    html += """
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Recent Tickets Table -->
+            <!-- Section 2: Recent Tickets -->
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                    Recent Tickets (Last 20)
+                    Recent Tickets
                 </h2>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
                         <thead>
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ticket</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Wave</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Source</th>
                                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
@@ -518,10 +542,19 @@ def generate_html_dashboard(tickets, stats):
     
     for ticket in recent_tickets:
         created_date = datetime.fromisoformat(ticket['created_at'].replace('Z', '+00:00')).strftime('%b %d, %Y')
-        wave_badge = ''
-        if ticket['wave']:
-            wave_class = 'bg-blue-100 text-blue-800' if '1' in ticket['wave'] else 'bg-green-100 text-green-800'
-            wave_badge = f'<span class="px-2 py-1 text-xs font-medium rounded {wave_class}">{ticket["wave"]}</span>'
+        
+        # Priority icon
+        priority_html = ''
+        if ticket['priority'] == 'Urgent':
+            priority_html = '<span class="priority-icon priority-urgent">!</span>'
+        elif ticket['priority'] == 'High':
+            priority_html = '<span class="priority-icon">▮▮▮</span>'
+        elif ticket['priority'] == 'Medium':
+            priority_html = '<span class="priority-icon">▮▮▯</span>'
+        elif ticket['priority'] == 'Low':
+            priority_html = '<span class="priority-icon">▮▯▯</span>'
+        else:
+            priority_html = '<span class="priority-icon">---</span>'
         
         html += f"""
                             <tr class="hover:bg-gray-50">
@@ -529,21 +562,92 @@ def generate_html_dashboard(tickets, stats):
                                     <a href="{ticket['url']}" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         {ticket['ticket_id']}
                                     </a>
-                                    <div class="text-sm text-gray-500 truncate max-w-xs">{ticket['title']}</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">{ticket['title']}</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-900">{ticket['customer'] or '—'}</td>
-                                <td class="px-4 py-3 text-sm text-gray-900">{ticket['project']}</td>
-                                <td class="px-4 py-3 text-sm">{wave_badge or '—'}</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">{ticket['project']}</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        {ticket['source_label']}
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">{created_date}</td>
+                                <td class="px-4 py-3">{priority_html}</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">{ticket['status']}</td>
+                            </tr>
+"""
+    
+    html += """
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Section 3: Priorities by Status -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    Priorities by Status
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Source</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+"""
+    
+    for ticket in priority_tickets:
+        # Priority icon
+        priority_html = ''
+        if ticket['priority'] == 'Urgent':
+            priority_html = '<span class="priority-icon priority-urgent">!</span>'
+        elif ticket['priority'] == 'High':
+            priority_html = '<span class="priority-icon">▮▮▮</span>'
+        elif ticket['priority'] == 'Medium':
+            priority_html = '<span class="priority-icon">▮▮▯</span>'
+        elif ticket['priority'] == 'Low':
+            priority_html = '<span class="priority-icon">▮▯▯</span>'
+        else:
+            priority_html = '<span class="priority-icon">---</span>'
+        
+        # Status badge color
+        status_color = 'bg-blue-100 text-blue-800'
+        if ticket['status'].lower() == 'done':
+            status_color = 'bg-green-100 text-green-800'
+        elif ticket['status'] == 'In Progress':
+            status_color = 'bg-yellow-100 text-yellow-800'
+        
+        html += f"""
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <a href="{ticket['url']}" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
+                                        {ticket['ticket_id']}
+                                    </a>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">{ticket['title']}</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">{ticket['project']}</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        {ticket['source_label']}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3">{priority_html}</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded {status_color}">
+                                        {ticket['status']}
+                                    </span>
+                                </td>
                             </tr>
 """
     
     # Prepare chart data
-    projects = list(stats['by_project'].keys())[:10]  # Top 10
-    project_counts = list(stats['by_project'].values())[:10]
-    
-    feature_areas = list(stats['by_feature_area'].keys())[:10]  # Top 10
-    feature_counts = list(stats['by_feature_area'].values())[:10]
+    feature_areas = list(stats['by_feature_area'].keys())
+    feature_counts = list(stats['by_feature_area'].values())
     
     html += f"""
                         </tbody>
@@ -578,53 +682,94 @@ def generate_html_dashboard(tickets, stats):
     </div>
     
     <script>
-        // Project Chart
-        const projectCtx = document.getElementById('projectChart').getContext('2d');
-        new Chart(projectCtx, {{
-            type: 'bar',
-            data: {{
-                labels: {json.dumps(projects)},
-                datasets: [{{
-                    label: 'Ticket Count',
-                    data: {json.dumps(project_counts)},
-                    backgroundColor: '#3b82f6'
-                }}]
-            }},
-            options: {{
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {{
-                    legend: {{ display: false }}
-                }},
-                scales: {{
-                    y: {{ beginAtZero: true }}
-                }}
-            }}
-        }});
+        // Load full data for filtering
+        let allIssues = [];
         
-        // Feature Area Chart
-        const featureCtx = document.getElementById('featureAreaChart').getContext('2d');
-        new Chart(featureCtx, {{
-            type: 'bar',
-            data: {{
-                labels: {json.dumps(feature_areas)},
-                datasets: [{{
-                    label: 'Ticket Count',
-                    data: {json.dumps(feature_counts)},
-                    backgroundColor: '#10b981'
-                }}]
-            }},
-            options: {{
-                responsive: true,
-                maintainAspectRatio: true,
-                plugins: {{
-                    legend: {{ display: false }}
-                }},
-                scales: {{
-                    y: {{ beginAtZero: true }}
+        fetch('data.json')
+            .then(response => response.json())
+            .then(data => {{
+                allIssues = data.issues;
+                updateChart();
+            }});
+        
+        let featureChart = null;
+        
+        function updateChart() {{
+            const timeFilter = document.getElementById('timeFilter').value;
+            const sourceFilter = Array.from(document.getElementById('sourceFilter').selectedOptions).map(opt => opt.value);
+            
+            // Filter issues based on selections
+            let filteredIssues = allIssues.filter(issue => {{
+                // Time filter
+                if (timeFilter !== 'all') {{
+                    const daysAgo = parseInt(timeFilter);
+                    const cutoffDate = new Date();
+                    cutoffDate.setDate(cutoffDate.getDate() - daysAgo);
+                    const createdDate = new Date(issue.createdAt);
+                    if (createdDate < cutoffDate) return false;
                 }}
+                
+                // Source filter
+                if (!sourceFilter.includes('all') && sourceFilter.length > 0) {{
+                    if (!sourceFilter.includes(issue.sourceLabel)) return false;
+                }}
+                
+                return true;
+            }});
+            
+            // Count by feature area
+            const featureAreaCounts = {{}};
+            filteredIssues.forEach(issue => {{
+                const area = issue.featureArea || 'Unknown';
+                featureAreaCounts[area] = (featureAreaCounts[area] || 0) + 1;
+            }});
+            
+            // Sort by count descending
+            const sortedAreas = Object.entries(featureAreaCounts)
+                .sort((a, b) => b[1] - a[1]);
+            
+            const labels = sortedAreas.map(([area, _]) => area);
+            const counts = sortedAreas.map(([_, count]) => count);
+            
+            // Update or create chart
+            const ctx = document.getElementById('featureAreaChart').getContext('2d');
+            
+            if (featureChart) {{
+                featureChart.destroy();
             }}
-        }});
+            
+            featureChart = new Chart(ctx, {{
+                type: 'bar',
+                data: {{
+                    labels: labels,
+                    datasets: [{{
+                        label: 'Ticket Count',
+                        data: counts,
+                        backgroundColor: '#10b981'
+                    }}]
+                }},
+                options: {{
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {{
+                        legend: {{ display: false }}
+                    }},
+                    scales: {{
+                        x: {{ 
+                            beginAtZero: true,
+                            ticks: {{
+                                stepSize: 1
+                            }}
+                        }}
+                    }}
+                }}
+            }});
+        }}
+        
+        // Add event listeners
+        document.getElementById('timeFilter').addEventListener('change', updateChart);
+        document.getElementById('sourceFilter').addEventListener('change', updateChart);
     </script>
 </body>
 </html>
@@ -665,7 +810,6 @@ def main():
     print("✨ Dashboard generation complete!")
     print(f"📊 Total tickets analyzed: {stats['total_tickets']}")
     print(f"👥 Unique customers: {stats['unique_customers']}")
-    print(f"📦 Projects: {len(stats['by_project'])}")
     print(f"📁 Feature areas: {len(stats['by_feature_area'])}")
 
 if __name__ == '__main__':

@@ -1,19 +1,6 @@
 {
   "total_tickets": 104,
   "unique_customers": 67,
-  "by_project": {
-    "Thermals & Comfort": 23,
-    "All things Dial": 15,
-    "Hardware Requests": 12,
-    "All things App": 11,
-    "Schedules": 10,
-    "Smart Home Integrations": 10,
-    "Auto-Away": 8,
-    "Energy + Usage": 7,
-    "Device management & operation": 5,
-    "Miscellaneous": 2,
-    "Partner Tooling": 1
-  },
   "by_feature_area": {
     "All things Dial": 15,
     "Thermals & Comfort": 14,
@@ -28,22 +15,8 @@
     "Device management & operation": 3,
     "Partner Tooling": 1
   },
-  "by_epic": {
-    "No Epic": 58,
-    "FEAT-260: \u2602\ufe0f Auto-Away pain points": 7,
-    "FEAT-117: \u2602\ufe0f Energy Usage": 6,
-    "FEAT-231: \u2602\ufe0f Modes & Controls": 5,
-    "FEAT-164: \u2602\ufe0f Dial sensitivity issues": 5,
-    "FEAT-258: \u2602\ufe0f Lighting": 4,
-    "FEAT-296: \u2602\ufe0f Fan speed control": 4,
-    "FEAT-162: \u2602\ufe0f Dial features": 3,
-    "FEAT-165: \u2602\ufe0f Dial interface hard to use": 3,
-    "FEAT-161: \u2602\ufe0f Dial advanced permissions": 2,
-    "FEAT-86: \u2602\ufe0f Local Control / Offline": 2,
-    "FEAT-160: \u2602\ufe0f Dial usability issues (misc)": 2,
-    "FEAT-96: Auto-Away behavior doesn't match expectations": 1,
-    "FEAT-290: \u2602\ufe0f Pairing": 1,
-    "FEAT-259: \u2602\ufe0f Home invites": 1
+  "by_source_label": {
+    "unlabeled": 104
   },
   "by_wave": {
     "Wave 1": 17,
@@ -64,5 +37,5 @@
     "No priority": 81,
     "High": 1
   },
-  "last_updated": "2025-11-14T09:14:10.982226"
+  "last_updated": "2025-11-15T00:32:23.564820"
 }
