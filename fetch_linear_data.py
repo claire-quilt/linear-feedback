@@ -394,21 +394,26 @@ def generate_html_dashboard(tickets, stats):
     recent_tickets = sorted(tickets, key=lambda x: x['created_at'], reverse=True)[:10]
     
     # Filter tickets for priorities section
-    # Include: In Progress, To Do, In Review, and Done (if completed within last 7 days)
+    # Include: In Progress, Todo, In Review, and Done (if completed within last 7 days)
     active_statuses = {'In Progress', 'Todo', 'In Review'}
-    seven_days_ago = datetime.now() - timedelta(days=7)
+    seven_days_ago = datetime.now(datetime.UTC if hasattr(datetime, 'UTC') else None).replace(tzinfo=None) - timedelta(days=7)
     
     priority_tickets = []
     for ticket in tickets:
         status = ticket['status']
-        if status in active_statuses or (status == 'In Progress' or status.lower() == 'done'):
-            # Check if Done ticket is within 7 days
-            if status.lower() == 'done' and ticket.get('completed_at'):
-                completed_date = datetime.fromisoformat(ticket['completed_at'].replace('Z', '+00:00'))
+        
+        # Include active statuses
+        if status in active_statuses:
+            priority_tickets.append(ticket)
+        # Include Done only if completed within last 7 days
+        elif status == 'Done' and ticket.get('completed_at'):
+            try:
+                completed_date = datetime.fromisoformat(ticket['completed_at'].replace('Z', '+00:00')).replace(tzinfo=None)
                 if completed_date >= seven_days_ago:
                     priority_tickets.append(ticket)
-            elif status.lower() != 'done':
-                priority_tickets.append(ticket)
+            except (ValueError, TypeError):
+                # Skip if date parsing fails
+                pass
     
     # Sort priority tickets by status order, then by updated date
     status_order = {'In Progress': 0, 'Todo': 1, 'In Review': 2, 'Done': 3}
@@ -617,10 +622,12 @@ def generate_html_dashboard(tickets, stats):
         
         # Status badge color
         status_color = 'bg-blue-100 text-blue-800'
-        if ticket['status'].lower() == 'done':
+        if ticket['status'] == 'Done':
             status_color = 'bg-green-100 text-green-800'
         elif ticket['status'] == 'In Progress':
             status_color = 'bg-yellow-100 text-yellow-800'
+        elif ticket['status'] == 'In Review':
+            status_color = 'bg-purple-100 text-purple-800'
         
         html += f"""
                             <tr class="hover:bg-gray-50">
