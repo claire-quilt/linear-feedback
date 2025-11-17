@@ -386,20 +386,33 @@ def generate_statistics(tickets):
     print("✅ Statistics saved to data/statistics.json")
     return stats
 
-def generate_html_dashboard(tickets, stats):
+def generate_html_dashboard(all_tickets, stats):
     """Generate HTML dashboard with improved layout"""
     print("🎨 Generating HTML dashboard...")
     
-    # Sort tickets by creation date (newest first) for recent tickets section
-    recent_tickets = sorted(tickets, key=lambda x: x['created_at'], reverse=True)[:10]
+    # Separate customer tickets for sections 1 & 2
+    customer_tickets = [t for t in all_tickets if t['has_customer_feedback']]
     
-    # Filter tickets for priorities section
+    # Debug: Show what statuses we have
+    all_statuses = set(ticket['status'] for ticket in all_tickets)
+    print(f"🔍 Debug: All unique statuses in all tickets: {all_statuses}")
+    print(f"🔍 Debug: Total tickets: {len(all_tickets)} (customer feedback: {len(customer_tickets)})")
+    
+    # Show first 5 tickets with their statuses
+    print(f"🔍 Debug: Sample of first 5 tickets:")
+    for i, ticket in enumerate(all_tickets[:5]):
+        print(f"   {i+1}. {ticket['ticket_id']}: '{ticket['status']}' (type: {type(ticket['status']).__name__})")
+    
+    # Sort customer tickets by creation date (newest first) for recent tickets section
+    recent_tickets = sorted(customer_tickets, key=lambda x: x['created_at'], reverse=True)[:10]
+    
+    # Filter tickets for priorities section (use ALL tickets, not just customer feedback)
     # Include: In Progress, Todo, In Review, and Done (if completed within last 7 days)
     active_statuses = {'In Progress', 'Todo', 'In Review'}
     seven_days_ago = datetime.now(datetime.UTC if hasattr(datetime, 'UTC') else None).replace(tzinfo=None) - timedelta(days=7)
     
     priority_tickets = []
-    for ticket in tickets:
+    for ticket in all_tickets:
         status = ticket['status']
         
         # Include active statuses
@@ -818,7 +831,7 @@ def main():
     generate_csv(customer_tickets)
     generate_json(parsed_tickets, projects)  # Include all tickets in JSON
     stats = generate_statistics(customer_tickets)
-    generate_html_dashboard(customer_tickets, stats)
+    generate_html_dashboard(parsed_tickets, stats)  # Pass all tickets for full dashboard
     
     print("=" * 60)
     print("✨ Dashboard generation complete!")
