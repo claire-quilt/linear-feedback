@@ -415,6 +415,13 @@ def generate_html_dashboard(tickets, stats):
                 # Skip if date parsing fails
                 pass
     
+    print(f"📋 Section 3: Found {len(priority_tickets)} tickets for Priorities by Status")
+    status_counts = {}
+    for ticket in priority_tickets:
+        status = ticket['status']
+        status_counts[status] = status_counts.get(status, 0) + 1
+    print(f"   Status breakdown: {status_counts}")
+    
     # Sort priority tickets by status order, then by updated date
     status_order = {'In Progress': 0, 'Todo': 1, 'In Review': 2, 'Done': 3}
     priority_tickets.sort(
