@@ -357,20 +357,24 @@ def generate_json(tickets, projects, output_file='data.json'):
     
     print(f"✅ JSON data saved to {output_file}")
 
-def generate_statistics(tickets):
-    """Generate statistics for the dashboard"""
+def generate_statistics(all_tickets):
+    """Generate statistics for the dashboard - uses ALL tickets for Section 1"""
     print("📈 Calculating statistics...")
     
     from collections import Counter
     
+    # Get customer tickets for customer-specific stats
+    customer_tickets = [t for t in all_tickets if t['has_customer_feedback']]
+    
     stats = {
-        'total_tickets': len(tickets),
-        'unique_customers': len(set(t['customer'] for t in tickets if t['customer'])),
-        'by_feature_area': dict(Counter(t['feature_area'] for t in tickets)),
-        'by_source_label': dict(Counter(t['source_label'] for t in tickets)),
-        'by_wave': dict(Counter(t['wave'] for t in tickets if t['wave'])),
-        'by_source_type': dict(Counter(t['source_type'] for t in tickets)),
-        'by_priority': dict(Counter(t['priority'] for t in tickets)),
+        'total_tickets': len(customer_tickets),
+        'unique_customers': len(set(t['customer'] for t in customer_tickets if t['customer'])),
+        # Use ALL tickets for feature area (Section 1 needs this)
+        'by_feature_area': dict(Counter(t['feature_area'] for t in all_tickets)),
+        'by_source_label': dict(Counter(t['source_label'] for t in customer_tickets)),
+        'by_wave': dict(Counter(t['wave'] for t in customer_tickets if t['wave'])),
+        'by_source_type': dict(Counter(t['source_type'] for t in customer_tickets)),
+        'by_priority': dict(Counter(t['priority'] for t in customer_tickets)),
         'last_updated': datetime.now().isoformat()
     }
     
@@ -387,13 +391,18 @@ def generate_statistics(tickets):
     return stats
 
 def generate_html_dashboard(all_tickets, stats):
-    """Generate HTML dashboard with improved layout"""
+    """Generate HTML dashboard with improved layout
+    
+    Section 1 (Trends): Uses all tickets to capture epics and full feature area coverage
+    Section 2 (Recent Tickets): Uses only customer-attributed tickets to show recent direct feedback
+    Section 3 (Priorities by Status): Uses all tickets to show current work
+    """
     print("🎨 Generating HTML dashboard...")
     
-    # Separate customer tickets for sections 1 & 2
+    # Separate customer tickets for Section 2
     customer_tickets = [t for t in all_tickets if t['has_customer_feedback']]
     
-    # Debug: Show what statuses we have
+    # Debug: Show what we're working with
     all_statuses = set(ticket['status'] for ticket in all_tickets)
     print(f"🔍 Debug: All unique statuses in all tickets: {all_statuses}")
     print(f"🔍 Debug: Total tickets: {len(all_tickets)} (customer feedback: {len(customer_tickets)})")
@@ -401,12 +410,13 @@ def generate_html_dashboard(all_tickets, stats):
     # Show first 5 tickets with their statuses
     print(f"🔍 Debug: Sample of first 5 tickets:")
     for i, ticket in enumerate(all_tickets[:5]):
-        print(f"   {i+1}. {ticket['ticket_id']}: '{ticket['status']}' (type: {type(ticket['status']).__name__})")
+        print(f"   {i+1}. {ticket['ticket_id']}: '{ticket['status']}' (customer: {ticket.get('has_customer_feedback', False)})")
     
-    # Sort customer tickets by creation date (newest first) for recent tickets section
+    # Section 2: Sort customer tickets by creation date (newest first) for recent tickets section
     recent_tickets = sorted(customer_tickets, key=lambda x: x['created_at'], reverse=True)[:10]
+    print(f"📋 Section 2: Showing {len(recent_tickets)} recent customer-attributed tickets")
     
-    # Filter tickets for priorities section (use ALL tickets, not just customer feedback)
+    # Section 3: Filter tickets for priorities section (use ALL tickets, not just customer feedback)
     # Include: In Progress, Todo, In Review, and Done (if completed within last 7 days)
     active_statuses = {'In Progress', 'Todo', 'In Review'}
     seven_days_ago = datetime.now(datetime.UTC if hasattr(datetime, 'UTC') else None).replace(tzinfo=None) - timedelta(days=7)
@@ -444,12 +454,9 @@ def generate_html_dashboard(all_tickets, stats):
         )
     )
     
-    # Get all feature areas for the chart (including zeros)
-    all_feature_areas = list(stats['by_feature_area'].keys())
+    # Get all feature areas for the chart
+    feature_areas = list(stats['by_feature_area'].keys())
     feature_counts = list(stats['by_feature_area'].values())
-    
-    # Get all unique source labels
-    all_source_labels = list(set(t['source_label'] for t in tickets))
     
     html = f"""<!DOCTYPE html>
 <html lang="en">
@@ -830,7 +837,7 @@ def main():
     # Generate outputs
     generate_csv(customer_tickets)
     generate_json(parsed_tickets, projects)  # Include all tickets in JSON
-    stats = generate_statistics(customer_tickets)
+    stats = generate_statistics(parsed_tickets)  # Pass all tickets for Section 1 stats
     generate_html_dashboard(parsed_tickets, stats)  # Pass all tickets for full dashboard
     
     print("=" * 60)
