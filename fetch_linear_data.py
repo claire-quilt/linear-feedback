@@ -394,8 +394,8 @@ def generate_html_dashboard(all_tickets, stats):
     """Generate HTML dashboard with improved layout
     
     Section 1 (Trends): Uses all tickets to capture epics and full feature area coverage
-    Section 2 (Recent Tickets): Uses only customer-attributed tickets to show recent direct feedback
-    Section 3 (Priorities by Status): Uses all tickets to show current work
+    Section 2 (Work in Queue): Uses all tickets to show current work
+    Section 3 (Recent Tickets): Uses only customer-attributed tickets to show recent direct feedback
     """
     print("🎨 Generating HTML dashboard...")
     
@@ -412,11 +412,7 @@ def generate_html_dashboard(all_tickets, stats):
     for i, ticket in enumerate(all_tickets[:5]):
         print(f"   {i+1}. {ticket['ticket_id']}: '{ticket['status']}' (customer: {ticket.get('has_customer_feedback', False)})")
     
-    # Section 2: Sort customer tickets by creation date (newest first) for recent tickets section
-    recent_tickets = sorted(customer_tickets, key=lambda x: x['created_at'], reverse=True)[:10]
-    print(f"📋 Section 2: Showing {len(recent_tickets)} recent customer-attributed tickets")
-    
-    # Section 3: Filter tickets for priorities section (use ALL tickets, not just customer feedback)
+    # Section 2: Filter tickets for Work in Queue (use ALL tickets, not just customer feedback)
     # Include: In Progress, Todo, In Review, and Done (if completed within last 7 days)
     active_statuses = {'In Progress', 'Todo', 'In Review'}
     seven_days_ago = datetime.now(datetime.UTC if hasattr(datetime, 'UTC') else None).replace(tzinfo=None) - timedelta(days=7)
@@ -438,12 +434,25 @@ def generate_html_dashboard(all_tickets, stats):
                 # Skip if date parsing fails
                 pass
     
-    print(f"📋 Section 3: Found {len(priority_tickets)} tickets for Priorities by Status")
+    print(f"📋 Section 2 (Work in Queue): Found {len(priority_tickets)} tickets")
     status_counts = {}
     for ticket in priority_tickets:
         status = ticket['status']
         status_counts[status] = status_counts.get(status, 0) + 1
     print(f"   Status breakdown: {status_counts}")
+    
+    # Sort priority tickets by status order, then by updated date
+    status_order = {'In Progress': 0, 'Todo': 1, 'In Review': 2, 'Done': 3}
+    priority_tickets.sort(
+        key=lambda x: (
+            status_order.get(x['status'], 999),
+            -datetime.fromisoformat(x['updated_at'].replace('Z', '+00:00')).timestamp()
+        )
+    )
+    
+    # Section 3: Sort customer tickets by creation date (newest first) for Recent Tickets
+    recent_tickets = sorted(customer_tickets, key=lambda x: x['created_at'], reverse=True)[:10]
+    print(f"📋 Section 3 (Recent Tickets): Showing {len(recent_tickets)} recent customer-attributed tickets")
     
     # Sort priority tickets by status order, then by updated date
     status_order = {'In Progress': 0, 'Todo': 1, 'In Review': 2, 'Done': 3}
@@ -527,14 +536,14 @@ def generate_html_dashboard(all_tickets, stats):
                         <label class="block text-sm font-medium text-gray-700 mb-2">Time Period</label>
                         <select id="timeFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
                             <option value="all">All time</option>
-                            <option value="30">Last 30 days</option>
+                            <option value="30" selected>Last 30 days</option>
                             <option value="60">Last 60 days</option>
                             <option value="90">Last 90 days</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Source</label>
-                        <select id="sourceFilter" multiple size="6" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                        <select id="sourceFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
                             <option value="all" selected>All sources</option>
                             <option value="zendesk">Zendesk</option>
                             <option value="CSAT">CSAT</option>
@@ -552,72 +561,10 @@ def generate_html_dashboard(all_tickets, stats):
                 </div>
             </div>
             
-            <!-- Section 2: Recent Tickets -->
+            <!-- Section 2: Work in Queue (formerly Section 3) -->
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                    Recent Tickets
-                </h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
-                            <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Source</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-"""
-    
-    for ticket in recent_tickets:
-        created_date = datetime.fromisoformat(ticket['created_at'].replace('Z', '+00:00')).strftime('%b %d, %Y')
-        
-        # Priority icon
-        priority_html = ''
-        if ticket['priority'] == 'Urgent':
-            priority_html = '<span class="priority-icon priority-urgent">!</span>'
-        elif ticket['priority'] == 'High':
-            priority_html = '<span class="priority-icon">▮▮▮</span>'
-        elif ticket['priority'] == 'Medium':
-            priority_html = '<span class="priority-icon">▮▮▯</span>'
-        elif ticket['priority'] == 'Low':
-            priority_html = '<span class="priority-icon">▮▯▯</span>'
-        else:
-            priority_html = '<span class="priority-icon">---</span>'
-        
-        html += f"""
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="{ticket['url']}" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        {ticket['ticket_id']}
-                                    </a>
-                                    <div class="text-sm text-gray-900 truncate max-w-md">{ticket['title']}</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-700">{ticket['project']}</td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
-                                        {ticket['source_label']}
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-500">{created_date}</td>
-                                <td class="px-4 py-3">{priority_html}</td>
-                                <td class="px-4 py-3 text-sm text-gray-700">{ticket['status']}</td>
-                            </tr>
-"""
-    
-    html += """
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <!-- Section 3: Priorities by Status -->
-            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                    Priorities by Status
+                    Work in Queue
                 </h2>
                 <div class="overflow-x-auto">
                     <table class="min-w-full divide-y divide-gray-200">
@@ -679,6 +626,68 @@ def generate_html_dashboard(all_tickets, stats):
                             </tr>
 """
     
+    html += """
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Section 3: Recent Tickets (formerly Section 2) -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    Recent Tickets
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Source</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Created</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+"""
+    
+    for ticket in recent_tickets:
+        created_date = datetime.fromisoformat(ticket['created_at'].replace('Z', '+00:00')).strftime('%b %d, %Y')
+        
+        # Priority icon
+        priority_html = ''
+        if ticket['priority'] == 'Urgent':
+            priority_html = '<span class="priority-icon priority-urgent">!</span>'
+        elif ticket['priority'] == 'High':
+            priority_html = '<span class="priority-icon">▮▮▮</span>'
+        elif ticket['priority'] == 'Medium':
+            priority_html = '<span class="priority-icon">▮▮▯</span>'
+        elif ticket['priority'] == 'Low':
+            priority_html = '<span class="priority-icon">▮▯▯</span>'
+        else:
+            priority_html = '<span class="priority-icon">---</span>'
+        
+        html += f"""
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <a href="{ticket['url']}" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
+                                        {ticket['ticket_id']}
+                                    </a>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">{ticket['title']}</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">{ticket['project']}</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        {ticket['source_label']}
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-500">{created_date}</td>
+                                <td class="px-4 py-3">{priority_html}</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">{ticket['status']}</td>
+                            </tr>
+"""
+    
     # Prepare chart data
     feature_areas = list(stats['by_feature_area'].keys())
     feature_counts = list(stats['by_feature_area'].values())
@@ -730,7 +739,7 @@ def generate_html_dashboard(all_tickets, stats):
         
         function updateChart() {{
             const timeFilter = document.getElementById('timeFilter').value;
-            const sourceFilter = Array.from(document.getElementById('sourceFilter').selectedOptions).map(opt => opt.value);
+            const sourceFilter = document.getElementById('sourceFilter').value;
             
             // Filter issues based on selections
             let filteredIssues = allIssues.filter(issue => {{
@@ -744,8 +753,8 @@ def generate_html_dashboard(all_tickets, stats):
                 }}
                 
                 // Source filter
-                if (!sourceFilter.includes('all') && sourceFilter.length > 0) {{
-                    if (!sourceFilter.includes(issue.sourceLabel)) return false;
+                if (sourceFilter !== 'all') {{
+                    if (issue.sourceLabel !== sourceFilter) return false;
                 }}
                 
                 return true;

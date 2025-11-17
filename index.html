@@ -35,7 +35,7 @@
                     Automated customer feedback analysis from Feature Requests team
                 </p>
                 <p class="text-sm text-gray-500 mt-2">
-                    Last updated: November 17, 2025 at 06:16 PM UTC
+                    Last updated: November 17, 2025 at 06:34 PM UTC
                 </p>
             </div>
             
@@ -67,14 +67,14 @@
                         <label class="block text-sm font-medium text-gray-700 mb-2">Time Period</label>
                         <select id="timeFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
                             <option value="all">All time</option>
-                            <option value="30">Last 30 days</option>
+                            <option value="30" selected>Last 30 days</option>
                             <option value="60">Last 60 days</option>
                             <option value="90">Last 90 days</option>
                         </select>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-2">Source</label>
-                        <select id="sourceFilter" multiple size="6" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
+                        <select id="sourceFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
                             <option value="all" selected>All sources</option>
                             <option value="zendesk">Zendesk</option>
                             <option value="CSAT">CSAT</option>
@@ -92,7 +92,114 @@
                 </div>
             </div>
             
-            <!-- Section 2: Recent Tickets -->
+            <!-- Section 2: Work in Queue (formerly Section 3) -->
+            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">
+                    Work in Queue
+                </h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Source</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <a href="https://linear.app/quiltair/issue/FEAT-233" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
+                                        FEAT-233
+                                    </a>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Add fan speed control to apps & Dial</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▮▮</span></td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-yellow-100 text-yellow-800">
+                                        In Progress
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <a href="https://linear.app/quiltair/issue/FEAT-299" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
+                                        FEAT-299
+                                    </a>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Thermals validation</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▮▮</span></td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">
+                                        Todo
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <a href="https://linear.app/quiltair/issue/FEAT-298" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
+                                        FEAT-298
+                                    </a>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">UX design for Dial</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▮▮</span></td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">
+                                        Todo
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
+                                    <a href="https://linear.app/quiltair/issue/FEAT-297" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
+                                        FEAT-297
+                                    </a>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">UX design for apps</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▮▮</span></td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">
+                                        Todo
+                                    </span>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Section 3: Recent Tickets (formerly Section 2) -->
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">
                     Recent Tickets
@@ -296,113 +403,6 @@
                 </div>
             </div>
             
-            <!-- Section 3: Priorities by Status -->
-            <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-                <h2 class="text-lg font-semibold text-gray-900 mb-4">
-                    Priorities by Status
-                </h2>
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead>
-                            <tr>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Title</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Project</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Source</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
-                                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-233" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-233
-                                    </a>
-                                    <div class="text-sm text-gray-900 truncate max-w-md">Add fan speed control to apps & Dial</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
-                                        unlabeled
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3"><span class="priority-icon">▮▮▮</span></td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded bg-yellow-100 text-yellow-800">
-                                        In Progress
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-299" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-299
-                                    </a>
-                                    <div class="text-sm text-gray-900 truncate max-w-md">Thermals validation</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
-                                        unlabeled
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3"><span class="priority-icon">▮▮▮</span></td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">
-                                        Todo
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-298" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-298
-                                    </a>
-                                    <div class="text-sm text-gray-900 truncate max-w-md">UX design for Dial</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
-                                        unlabeled
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3"><span class="priority-icon">▮▮▮</span></td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">
-                                        Todo
-                                    </span>
-                                </td>
-                            </tr>
-
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-297" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-297
-                                    </a>
-                                    <div class="text-sm text-gray-900 truncate max-w-md">UX design for apps</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
-                                        unlabeled
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3"><span class="priority-icon">▮▮▮</span></td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded bg-blue-100 text-blue-800">
-                                        Todo
-                                    </span>
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
             <!-- Download Section -->
             <div class="bg-white rounded-lg shadow-sm p-6">
                 <h2 class="text-lg font-semibold text-gray-900 mb-4">
@@ -444,7 +444,7 @@
         
         function updateChart() {
             const timeFilter = document.getElementById('timeFilter').value;
-            const sourceFilter = Array.from(document.getElementById('sourceFilter').selectedOptions).map(opt => opt.value);
+            const sourceFilter = document.getElementById('sourceFilter').value;
             
             // Filter issues based on selections
             let filteredIssues = allIssues.filter(issue => {
@@ -458,8 +458,8 @@
                 }
                 
                 // Source filter
-                if (!sourceFilter.includes('all') && sourceFilter.length > 0) {
-                    if (!sourceFilter.includes(issue.sourceLabel)) return false;
+                if (sourceFilter !== 'all') {
+                    if (issue.sourceLabel !== sourceFilter) return false;
                 }
                 
                 return true;
