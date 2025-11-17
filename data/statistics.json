@@ -2,18 +2,20 @@
   "total_tickets": 104,
   "unique_customers": 67,
   "by_feature_area": {
-    "All things Dial": 15,
-    "Thermals & Comfort": 14,
-    "Hardware Requests": 12,
-    "Modes & Controls": 11,
-    "All things App": 10,
+    "All things Dial": 41,
+    "Energy + Usage": 36,
+    "All things App": 25,
+    "Thermals & Comfort": 22,
+    "Auto-Away": 20,
+    "Schedules": 18,
+    "Modes & Controls": 17,
+    "Device management & operation": 17,
+    "Hardware Requests": 13,
     "Smart Home Integrations": 10,
-    "Schedules": 9,
-    "Auto-Away": 8,
-    "Energy + Usage": 7,
-    "Lighting": 4,
-    "Device management & operation": 3,
-    "Partner Tooling": 1
+    "Lighting": 7,
+    "Miscellaneous": 5,
+    "Partner Tooling": 3,
+    "User Feedback": 2
   },
   "by_source_label": {
     "unlabeled": 104
@@ -37,5 +39,5 @@
     "No priority": 81,
     "High": 1
   },
-  "last_updated": "2025-11-17T18:01:26.147512"
+  "last_updated": "2025-11-17T18:16:24.724651"
 }
