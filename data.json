@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-11-17T18:34:18.570840",
+  "lastUpdated": "2025-11-18T09:15:14.291256",
   "projects": [
     {
       "id": "0aac74b2-ea29-4e73-96f4-b17a52dcb7e8",
@@ -75,6 +75,23 @@
     }
   ],
   "issues": [
+    {
+      "id": "FEAT-324",
+      "title": "Enable sorting for multi-home users",
+      "url": "https://linear.app/quiltair/issue/FEAT-324",
+      "createdAt": "2025-11-17T21:55:12.707Z",
+      "updatedAt": "2025-11-17T22:20:57.930Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "All things App",
+      "featureArea": "All things App",
+      "sourceLabel": "unlabeled",
+      "priority": "Low",
+      "priorityValue": 4,
+      "state": "Backlog",
+      "stateType": "backlog"
+    },
     {
       "id": "FEAT-323",
       "title": "Low ambient cooling capability (winter cooling for special use cases)",
