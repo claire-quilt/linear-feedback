@@ -4,7 +4,7 @@
   "by_feature_area": {
     "All things Dial": 41,
     "Energy + Usage": 36,
-    "All things App": 25,
+    "All things App": 26,
     "Thermals & Comfort": 22,
     "Auto-Away": 20,
     "Schedules": 18,
@@ -39,5 +39,5 @@
     "No priority": 81,
     "High": 1
   },
-  "last_updated": "2025-11-17T18:34:18.574187"
+  "last_updated": "2025-11-18T09:15:14.294609"
 }
