@@ -1,32 +1,32 @@
 {
-  "total_tickets": 104,
+  "total_tickets": 103,
   "unique_customers": 67,
   "by_feature_area": {
     "All things Dial": 41,
-    "Energy + Usage": 36,
+    "Energy + Usage": 37,
     "All things App": 26,
     "Thermals & Comfort": 22,
-    "Auto-Away": 20,
+    "Auto-Away": 21,
+    "Device management & operation": 18,
+    "Modes & Controls": 18,
     "Schedules": 18,
-    "Modes & Controls": 17,
-    "Device management & operation": 17,
-    "Hardware Requests": 13,
-    "Smart Home Integrations": 10,
+    "Hardware Requests": 14,
+    "Smart Home Integrations": 12,
     "Lighting": 7,
     "Miscellaneous": 5,
     "Partner Tooling": 3,
     "User Feedback": 2
   },
   "by_source_label": {
-    "unlabeled": 104
+    "unlabeled": 103
   },
   "by_wave": {
-    "Wave 1": 17,
+    "Wave 1": 16,
     "Wave 2": 48
   },
   "by_source_type": {
     "Unknown": 16,
-    "CSAT Survey": 63,
+    "CSAT Survey": 62,
     "Early Adopter Research": 3,
     "Usage Survey": 13,
     "Beta Testing": 3,
@@ -36,8 +36,8 @@
   "by_priority": {
     "Low": 18,
     "Medium": 4,
-    "No priority": 81,
+    "No priority": 80,
     "High": 1
   },
-  "last_updated": "2025-11-19T09:15:11.151051"
+  "last_updated": "2025-11-20T09:14:24.591746"
 }
