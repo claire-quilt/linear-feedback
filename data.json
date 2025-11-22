@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-11-21T09:14:10.340918",
+  "lastUpdated": "2025-11-22T09:12:22.977532",
   "projects": [
     {
       "id": "0aac74b2-ea29-4e73-96f4-b17a52dcb7e8",
@@ -3406,6 +3406,23 @@
       "priorityValue": 3,
       "state": "Backlog",
       "stateType": "backlog"
+    },
+    {
+      "id": "FEAT-333",
+      "title": "Support forced heating and cooling at installation",
+      "url": "https://linear.app/quiltair/issue/FEAT-333",
+      "createdAt": "2024-08-29T22:51:43.974Z",
+      "updatedAt": "2025-11-21T21:38:00.718Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "No Project",
+      "featureArea": "Unknown",
+      "sourceLabel": "unlabeled",
+      "priority": "No priority",
+      "priorityValue": 0,
+      "state": "Triage",
+      "stateType": "triage"
     },
     {
       "id": "FEAT-33",
