@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-11-24T09:17:02.387471",
+  "lastUpdated": "2025-11-25T09:16:21.058791",
   "projects": [
     {
       "id": "0aac74b2-ea29-4e73-96f4-b17a52dcb7e8",
@@ -3593,6 +3593,23 @@
       "priorityValue": 0,
       "state": "Backlog",
       "stateType": "backlog"
+    },
+    {
+      "id": "FEAT-334",
+      "title": "Homeowners can reset & transfer their Quilt systems",
+      "url": "https://linear.app/quiltair/issue/FEAT-334",
+      "createdAt": "2023-12-13T18:50:21.557Z",
+      "updatedAt": "2025-11-24T19:00:52.627Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "No Project",
+      "featureArea": "Unknown",
+      "sourceLabel": "unlabeled",
+      "priority": "No priority",
+      "priorityValue": 0,
+      "state": "Triage",
+      "stateType": "triage"
     },
     {
       "id": "FEAT-206",
