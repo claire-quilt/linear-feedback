@@ -12,7 +12,7 @@
     "Schedules": 18,
     "Hardware Requests": 14,
     "Smart Home Integrations": 12,
-    "Lighting": 7,
+    "Lighting": 8,
     "Miscellaneous": 5,
     "Partner Tooling": 3,
     "User Feedback": 2,
@@ -40,5 +40,5 @@
     "No priority": 80,
     "High": 1
   },
-  "last_updated": "2025-11-25T09:16:21.062240"
+  "last_updated": "2025-11-26T09:15:39.997063"
 }

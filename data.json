@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-11-25T09:16:21.058791",
+  "lastUpdated": "2025-11-26T09:15:39.993641",
   "projects": [
     {
       "id": "0aac74b2-ea29-4e73-96f4-b17a52dcb7e8",
@@ -75,6 +75,23 @@
     }
   ],
   "issues": [
+    {
+      "id": "FEAT-335",
+      "title": "Space-level scheduling for LEDs in datamodel",
+      "url": "https://linear.app/quiltair/issue/FEAT-335",
+      "createdAt": "2025-11-25T22:02:48.272Z",
+      "updatedAt": "2025-11-25T22:11:45.191Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "Miscellaneous",
+      "featureArea": "Lighting",
+      "sourceLabel": "unlabeled",
+      "priority": "No priority",
+      "priorityValue": 0,
+      "state": "Todo",
+      "stateType": "unstarted"
+    },
     {
       "id": "FEAT-332",
       "title": "\u2602\ufe0f Smarts features",
@@ -420,7 +437,7 @@
       "title": "Wake-up light scheduling for toddler",
       "url": "https://linear.app/quiltair/issue/FEAT-301",
       "createdAt": "2025-11-13T19:53:41.993Z",
-      "updatedAt": "2025-11-19T17:34:23.912Z",
+      "updatedAt": "2025-11-25T22:03:26.704Z",
       "completedAt": null,
       "customer": "Shayle",
       "wave": null,
@@ -488,7 +505,7 @@
       "title": "UX design for apps",
       "url": "https://linear.app/quiltair/issue/FEAT-297",
       "createdAt": "2025-11-13T17:59:10.980Z",
-      "updatedAt": "2025-11-13T18:41:38.808Z",
+      "updatedAt": "2025-11-26T08:55:08.438Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
@@ -862,7 +879,7 @@
       "title": "\u2602\ufe0f Lighting",
       "url": "https://linear.app/quiltair/issue/FEAT-258",
       "createdAt": "2025-11-07T02:52:11.853Z",
-      "updatedAt": "2025-11-13T22:03:08.668Z",
+      "updatedAt": "2025-11-25T22:03:15.441Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
@@ -1253,7 +1270,7 @@
       "title": "Light scheduler/recurring schedule for indoor unit lights",
       "url": "https://linear.app/quiltair/issue/FEAT-154",
       "createdAt": "2025-11-06T04:37:33.760Z",
-      "updatedAt": "2025-11-11T21:19:43.331Z",
+      "updatedAt": "2025-11-25T22:03:42.888Z",
       "completedAt": null,
       "customer": "Robin Friedman",
       "wave": null,
@@ -2307,7 +2324,7 @@
       "title": "Wake-up light (gradual LED sunrise)",
       "url": "https://linear.app/quiltair/issue/FEAT-1",
       "createdAt": "2025-10-10T20:27:10.320Z",
-      "updatedAt": "2025-11-19T17:34:29.932Z",
+      "updatedAt": "2025-11-25T22:03:54.567Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
