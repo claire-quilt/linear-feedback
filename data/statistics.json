@@ -6,7 +6,7 @@
     "Energy + Usage": 37,
     "All things App": 27,
     "Thermals & Comfort": 24,
-    "Auto-Away": 21,
+    "Auto-Away": 22,
     "Device management & operation": 18,
     "Modes & Controls": 18,
     "Schedules": 18,
@@ -39,5 +39,5 @@
     "No priority": 80,
     "High": 1
   },
-  "last_updated": "2025-12-01T09:20:33.367660"
+  "last_updated": "2025-12-02T09:19:10.048112"
 }
