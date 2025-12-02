@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-01T09:20:33.364180",
+  "lastUpdated": "2025-12-02T09:19:10.044636",
   "projects": [
     {
       "id": "0aac74b2-ea29-4e73-96f4-b17a52dcb7e8",
@@ -75,6 +75,23 @@
     }
   ],
   "issues": [
+    {
+      "id": "FEAT-338",
+      "title": "Temporarily disable Auto-Away",
+      "url": "https://linear.app/quiltair/issue/FEAT-338",
+      "createdAt": "2025-12-01T16:54:53.008Z",
+      "updatedAt": "2025-12-01T16:54:53.008Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "Auto-Away",
+      "featureArea": "Auto-Away",
+      "sourceLabel": "unlabeled",
+      "priority": "No priority",
+      "priorityValue": 0,
+      "state": "Triage",
+      "stateType": "triage"
+    },
     {
       "id": "FEAT-337",
       "title": "Thermodynamix requests dehumidification / dry mode (outside of cooling)",
