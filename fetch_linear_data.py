@@ -34,11 +34,14 @@ query($teamId: String!) {
 
 # GraphQL query to fetch all tickets from Feature Requests team
 ISSUES_QUERY = """
-query($teamId: String!) {
+query($teamId: String!, $createdAfter: DateTimeOrDuration!) {
   team(id: $teamId) {
     id
     name
-    issues(first: 250, filter: { state: { type: { nin: ["canceled"] } } }) {
+    issues(first: 250, filter: { 
+      state: { type: { nin: ["canceled"] } },
+      createdAt: { gte: $createdAfter }
+    }) {
       nodes {
         id
         identifier
@@ -116,10 +119,17 @@ def fetch_linear_issues():
         'Authorization': LINEAR_API_KEY
     }
     
+    # Calculate date 12 months ago
+    twelve_months_ago = datetime.now() - timedelta(days=365)
+    created_after = twelve_months_ago.strftime('%Y-%m-%dT%H:%M:%S.000Z')
+    
+    print(f"   📅 Filtering to tickets created after: {twelve_months_ago.strftime('%Y-%m-%d')}")
+    
     payload = {
         'query': ISSUES_QUERY,
         'variables': {
-            'teamId': FEATURE_REQUESTS_TEAM_ID
+            'teamId': FEATURE_REQUESTS_TEAM_ID,
+            'createdAfter': created_after
         }
     }
     
