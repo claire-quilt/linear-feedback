@@ -123,7 +123,7 @@ def fetch_linear_issues():
     twelve_months_ago = datetime.now() - timedelta(days=365)
     created_after = twelve_months_ago.strftime('%Y-%m-%dT%H:%M:%S.000Z')
     
-    print(f"   📅 Filtering to tickets created after: {twelve_months_ago.strftime('%Y-%m-%d')}")
+    print(f"   📅 Filtering to tickets created after {twelve_months_ago.strftime('%Y-%m-%d')} OR in active work statuses")
     
     all_issues = []
     has_more = True
@@ -132,6 +132,9 @@ def fetch_linear_issues():
     
     while has_more:
         # Build query with pagination
+        # Fetch tickets that are either:
+        # 1. Created within last 12 months, OR
+        # 2. Currently in active work statuses (In Progress, Todo, In Review)
         query = """
         query($teamId: String!, $createdAfter: DateTimeOrDuration!, $after: String) {
           team(id: $teamId) {
@@ -139,7 +142,10 @@ def fetch_linear_issues():
             name
             issues(first: 250, after: $after, filter: { 
               state: { type: { nin: ["canceled"] } },
-              createdAt: { gte: $createdAfter }
+              or: [
+                { createdAt: { gte: $createdAfter } },
+                { state: { name: { in: ["In Progress", "Todo", "In Review"] } } }
+              ]
             }) {
               nodes {
                 id
@@ -506,17 +512,6 @@ def generate_html_dashboard(all_tickets, stats):
             except (ValueError, TypeError):
                 # Skip if date parsing fails
                 pass
-    
-    # Debug: Check for specific tickets
-    feat_233 = next((t for t in all_tickets if t['ticket_id'] == 'FEAT-233'), None)
-    if feat_233:
-        print(f"   🔍 Debug: FEAT-233 found - status='{feat_233['status']}', in priority_tickets={any(t['ticket_id'] == 'FEAT-233' for t in priority_tickets)}")
-    else:
-        print(f"   🔍 Debug: FEAT-233 NOT found in all_tickets")
-    
-    feat_340 = next((t for t in all_tickets if t['ticket_id'] == 'FEAT-340'), None)
-    if feat_340:
-        print(f"   🔍 Debug: FEAT-340 found - status='{feat_340['status']}', in priority_tickets={any(t['ticket_id'] == 'FEAT-340' for t in priority_tickets)}")
     
     # Sort priority tickets by status order, then by updated date
     status_order = {'In Progress': 0, 'Todo': 1, 'In Review': 2, 'Done': 3}
