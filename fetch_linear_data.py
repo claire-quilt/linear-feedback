@@ -243,6 +243,7 @@ def fetch_linear_issues():
         print(f"   ✅ FEAT-329 found in fetched issues")
         print(f"      Status: {feat_329['state']['name']}")
         print(f"      Created: {feat_329['createdAt']}")
+        print(f"      Labels: {[label['name'] for label in feat_329.get('labels', {}).get('nodes', [])]}")
     else:
         print(f"   ❌ FEAT-329 NOT found in fetched issues - it was filtered out by the API query")
     
@@ -256,6 +257,9 @@ def get_source_label(labels):
         return 'unlabeled'
     
     label_names = [label['name'].lower() for label in labels]
+    
+    # Debug: print labels for troubleshooting
+    # print(f"      Labels found: {label_names}")
     
     for label in label_names:
         if 'zendesk' in label:
@@ -948,6 +952,7 @@ def main():
         print(f"   ✅ FEAT-329 found in parsed tickets")
         print(f"      Has customer feedback: {feat_329_parsed['has_customer_feedback']}")
         print(f"      Status: {feat_329_parsed['status']}")
+        print(f"      Source label: {feat_329_parsed['source_label']}")
     else:
         print(f"   ❌ FEAT-329 NOT in parsed tickets")
     
