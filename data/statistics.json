@@ -18,7 +18,8 @@
     "User Feedback": 2
   },
   "by_source_label": {
-    "unlabeled": 103
+    "unlabeled": 95,
+    "other": 8
   },
   "by_wave": {
     "Wave 1": 16,
@@ -39,5 +40,5 @@
     "No priority": 80,
     "High": 1
   },
-  "last_updated": "2025-12-04T09:17:50.030771"
+  "last_updated": "2025-12-04T15:39:17.588334"
 }
