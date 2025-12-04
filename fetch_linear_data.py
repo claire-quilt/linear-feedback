@@ -34,7 +34,7 @@ query($teamId: String!) {
 
 # GraphQL query to fetch all tickets from Feature Requests team
 ISSUES_QUERY = """
-query($teamId: String!, $createdAfter: DateTime!) {
+query($teamId: String!, $createdAfter: DateTimeOrDuration!) {
   team(id: $teamId) {
     id
     name
