@@ -498,7 +498,7 @@ def generate_html_dashboard(all_tickets, stats):
     
     Section 1 (Trends): Uses all tickets to capture epics and full feature area coverage
     Section 2 (Work in Queue): Uses all tickets to show current work
-    Section 3 (Recent Tickets): Uses only customer-attributed tickets to show recent direct feedback
+    Section 3 (Recent Tickets): Uses all tickets to show recently created tickets
     """
     print("🎨 Generating HTML dashboard...")
     
@@ -553,9 +553,9 @@ def generate_html_dashboard(all_tickets, stats):
         )
     )
     
-    # Section 3: Sort customer tickets by creation date (newest first) for Recent Tickets
-    recent_tickets = sorted(customer_tickets, key=lambda x: x['created_at'], reverse=True)[:10]
-    print(f"📋 Section 3 (Recent Tickets): Showing {len(recent_tickets)} recent customer-attributed tickets")
+    # Section 3: Sort ALL tickets by creation date (newest first) for Recent Tickets
+    recent_tickets = sorted(all_tickets, key=lambda x: x['created_at'], reverse=True)[:10]
+    print(f"📋 Section 3 (Recent Tickets): Showing {len(recent_tickets)} most recent tickets (all types)")
     
     # Sort priority tickets by status order, then by updated date
     status_order = {'In Progress': 0, 'Todo': 1, 'In Review': 2, 'Done': 3}
