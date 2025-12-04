@@ -507,6 +507,17 @@ def generate_html_dashboard(all_tickets, stats):
                 # Skip if date parsing fails
                 pass
     
+    # Debug: Check for specific tickets
+    feat_233 = next((t for t in all_tickets if t['ticket_id'] == 'FEAT-233'), None)
+    if feat_233:
+        print(f"   🔍 Debug: FEAT-233 found - status='{feat_233['status']}', in priority_tickets={any(t['ticket_id'] == 'FEAT-233' for t in priority_tickets)}")
+    else:
+        print(f"   🔍 Debug: FEAT-233 NOT found in all_tickets")
+    
+    feat_340 = next((t for t in all_tickets if t['ticket_id'] == 'FEAT-340'), None)
+    if feat_340:
+        print(f"   🔍 Debug: FEAT-340 found - status='{feat_340['status']}', in priority_tickets={any(t['ticket_id'] == 'FEAT-340' for t in priority_tickets)}")
+    
     # Sort priority tickets by status order, then by updated date
     status_order = {'In Progress': 0, 'Todo': 1, 'In Review': 2, 'Done': 3}
     priority_tickets.sort(
