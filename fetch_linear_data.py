@@ -119,11 +119,12 @@ def fetch_linear_issues():
         'Authorization': LINEAR_API_KEY
     }
     
-    # Calculate date 12 months ago
+    # Calculate date 12 months ago (for reference only - not being used in query currently)
     twelve_months_ago = datetime.now() - timedelta(days=365)
     created_after = twelve_months_ago.strftime('%Y-%m-%dT%H:%M:%S.000Z')
     
-    print(f"   📅 Filtering to tickets created after: {twelve_months_ago.strftime('%Y-%m-%d')}")
+    print(f"   📅 Current date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print(f"   ⚠️  DEBUG MODE: Fetching ALL tickets (no date filter)")
     
     all_issues = []
     has_more = True
@@ -131,15 +132,14 @@ def fetch_linear_issues():
     page = 1
     
     while has_more:
-        # Build query with pagination
+        # Build query with pagination - TEMPORARILY REMOVED DATE FILTER FOR DEBUGGING
         query = """
-        query($teamId: String!, $createdAfter: DateTimeOrDuration!, $after: String) {
+        query($teamId: String!, $after: String) {
           team(id: $teamId) {
             id
             name
             issues(first: 250, after: $after, filter: { 
-              state: { type: { nin: ["canceled"] } },
-              createdAt: { gte: $createdAfter }
+              state: { type: { nin: ["canceled"] } }
             }) {
               nodes {
                 id
@@ -184,8 +184,7 @@ def fetch_linear_issues():
         """
         
         variables = {
-            'teamId': FEATURE_REQUESTS_TEAM_ID,
-            'createdAfter': created_after
+            'teamId': FEATURE_REQUESTS_TEAM_ID
         }
         
         if cursor:
@@ -230,6 +229,23 @@ def fetch_linear_issues():
     ]
     
     print(f"✅ Found {len(all_issues)} issues total ({len(all_issues) - len(filtered_issues)} converted epics filtered out)")
+    
+    # Debug: Show most recent 10 ticket IDs and their creation dates
+    print(f"   📋 Most recent 10 tickets:")
+    recent_sorted = sorted(all_issues, key=lambda x: x['createdAt'], reverse=True)[:10]
+    for issue in recent_sorted:
+        created = datetime.fromisoformat(issue['createdAt'].replace('Z', '+00:00'))
+        print(f"      {issue['identifier']}: {created.strftime('%Y-%m-%d %H:%M')}")
+    
+    # Debug: Check for FEAT-329
+    feat_329 = next((issue for issue in all_issues if issue['identifier'] == 'FEAT-329'), None)
+    if feat_329:
+        print(f"   ✅ FEAT-329 found in fetched issues")
+        print(f"      Status: {feat_329['state']['name']}")
+        print(f"      Created: {feat_329['createdAt']}")
+    else:
+        print(f"   ❌ FEAT-329 NOT found in fetched issues - it was filtered out by the API query")
+    
     return filtered_issues
 
 def get_source_label(labels):
@@ -925,6 +941,15 @@ def main():
     
     # Parse tickets
     parsed_tickets = [parse_ticket(t, raw_issues) for t in raw_issues]
+    
+    # Debug: Check if FEAT-329 made it through parsing
+    feat_329_parsed = next((t for t in parsed_tickets if t['ticket_id'] == 'FEAT-329'), None)
+    if feat_329_parsed:
+        print(f"   ✅ FEAT-329 found in parsed tickets")
+        print(f"      Has customer feedback: {feat_329_parsed['has_customer_feedback']}")
+        print(f"      Status: {feat_329_parsed['status']}")
+    else:
+        print(f"   ❌ FEAT-329 NOT in parsed tickets")
     
     # Filter to only tickets with customer feedback
     customer_tickets = [t for t in parsed_tickets if t['has_customer_feedback']]
