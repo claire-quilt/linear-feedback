@@ -111,7 +111,7 @@ def fetch_projects():
     return projects
 
 def fetch_linear_issues():
-    """Fetch issues from Linear API"""
+    """Fetch issues from Linear API with pagination"""
     print("🔍 Fetching issues from Linear API...")
     
     headers = {
@@ -125,34 +125,111 @@ def fetch_linear_issues():
     
     print(f"   📅 Filtering to tickets created after: {twelve_months_ago.strftime('%Y-%m-%d')}")
     
-    payload = {
-        'query': ISSUES_QUERY,
-        'variables': {
+    all_issues = []
+    has_more = True
+    cursor = None
+    page = 1
+    
+    while has_more:
+        # Build query with pagination
+        query = """
+        query($teamId: String!, $createdAfter: DateTimeOrDuration!, $after: String) {
+          team(id: $teamId) {
+            id
+            name
+            issues(first: 250, after: $after, filter: { 
+              state: { type: { nin: ["canceled"] } },
+              createdAt: { gte: $createdAfter }
+            }) {
+              nodes {
+                id
+                identifier
+                title
+                description
+                state {
+                  name
+                  type
+                }
+                priority
+                priorityLabel
+                project {
+                  id
+                  name
+                }
+                parent {
+                  id
+                  identifier
+                  title
+                }
+                createdAt
+                updatedAt
+                completedAt
+                creator {
+                  name
+                  email
+                }
+                labels {
+                  nodes {
+                    name
+                  }
+                }
+              }
+              pageInfo {
+                hasNextPage
+                endCursor
+              }
+            }
+          }
+        }
+        """
+        
+        variables = {
             'teamId': FEATURE_REQUESTS_TEAM_ID,
             'createdAfter': created_after
         }
-    }
-    
-    response = requests.post(LINEAR_API_URL, json=payload, headers=headers)
-    
-    if response.status_code != 200:
-        raise Exception(f"API request failed with status {response.status_code}: {response.text}")
-    
-    data = response.json()
-    
-    if 'errors' in data:
-        raise Exception(f"GraphQL errors: {data['errors']}")
-    
-    issues = data['data']['team']['issues']['nodes']
+        
+        if cursor:
+            variables['after'] = cursor
+        
+        payload = {
+            'query': query,
+            'variables': variables
+        }
+        
+        response = requests.post(LINEAR_API_URL, json=payload, headers=headers)
+        
+        if response.status_code != 200:
+            raise Exception(f"API request failed with status {response.status_code}: {response.text}")
+        
+        data = response.json()
+        
+        if 'errors' in data:
+            raise Exception(f"GraphQL errors: {data['errors']}")
+        
+        issues_data = data['data']['team']['issues']
+        issues = issues_data['nodes']
+        page_info = issues_data['pageInfo']
+        
+        all_issues.extend(issues)
+        print(f"   📄 Fetched page {page}: {len(issues)} issues (total so far: {len(all_issues)})")
+        
+        has_more = page_info['hasNextPage']
+        cursor = page_info['endCursor']
+        page += 1
+        
+        # Safety limit to prevent infinite loops
+        if page > 20:
+            print(f"   ⚠️  Reached pagination safety limit of 20 pages")
+            break
     
     # Filter out issues that were converted to projects
     filtered_issues = [
-        issue for issue in issues
+        issue for issue in all_issues
         if not ('converted to project' in issue['title'].lower() or
                 (issue.get('description') and 'converted to project' in issue['description'].lower()))
     ]
     
-    print(f"✅ Found {len(issues)} issues ({len(issues) - len(filtered_issues)} converted epics filtered out)")
+    print(f"✅ Found {len(all_issues)} issues total ({len(all_issues) - len(filtered_issues)} converted epics filtered out)")
     return filtered_issues
 
 def get_source_label(labels):
