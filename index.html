@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linear Feature Requests Dashboard - Quilt</title>
+    <title>Quilt Customer Feedback Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
@@ -29,13 +29,13 @@
             <!-- Header -->
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                    Linear Feature Requests Dashboard
+                    Quilt Customer Feedback Dashboard
                 </h1>
                 <p class="text-gray-600">
-                    Automated customer feedback analysis from Feature Requests team
+                    Automated ticket analysis from Quilt's Feature Requests team in Linear
                 </p>
                 <p class="text-sm text-gray-500 mt-2">
-                    Last updated: December 04, 2025 at 03:39 PM UTC
+                    Last updated: December 04, 2025 at 05:32 PM UTC
                 </p>
             </div>
             
@@ -43,11 +43,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <div class="text-sm font-medium text-gray-600 mb-1">Total Tickets</div>
-                    <div class="text-3xl font-bold text-gray-900">103</div>
+                    <div class="text-3xl font-bold text-gray-900">102</div>
                 </div>
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <div class="text-sm font-medium text-gray-600 mb-1">Unique Customers</div>
-                    <div class="text-3xl font-bold text-gray-900">67</div>
+                    <div class="text-3xl font-bold text-gray-900">66</div>
                 </div>
                 <div class="bg-white rounded-lg shadow-sm p-6">
                     <div class="text-sm font-medium text-gray-600 mb-1">Feature Areas</div>
@@ -80,6 +80,7 @@
                             <option value="CSAT">CSAT</option>
                             <option value="sales">Sales</option>
                             <option value="partner success">Partner Success</option>
+                            <option value="UXR">UXR</option>
                             <option value="other">Other</option>
                             <option value="unlabeled">Unlabeled</option>
                         </select>
@@ -112,18 +113,18 @@
 
                             <tr class="hover:bg-gray-50">
                                 <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-233" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-233
+                                    <a href="https://linear.app/quiltair/issue/FEAT-340" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
+                                        FEAT-340
                                     </a>
-                                    <div class="text-sm text-gray-900 truncate max-w-md">Add fan speed control to apps & Dial</div>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Design for scheduling accent light in Schedules</div>
                                 </td>
-                                <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Miscellaneous</td>
                                 <td class="px-4 py-3">
                                     <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
                                         unlabeled
                                     </span>
                                 </td>
-                                <td class="px-4 py-3"><span class="priority-icon">▮▮▮</span></td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▮▯</span></td>
                                 <td class="px-4 py-3">
                                     <span class="px-2 py-1 text-xs font-medium rounded bg-yellow-100 text-yellow-800">
                                         In Progress
@@ -241,6 +242,24 @@
 
                             <tr class="hover:bg-gray-50">
                                 <td class="px-4 py-3">
+                                    <a href="https://linear.app/quiltair/issue/FEAT-340" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
+                                        FEAT-340
+                                    </a>
+                                    <div class="text-sm text-gray-900 truncate max-w-md">Design for scheduling accent light in Schedules</div>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-700">Miscellaneous</td>
+                                <td class="px-4 py-3">
+                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
+                                        unlabeled
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-sm text-gray-500">Dec 04, 2025</td>
+                                <td class="px-4 py-3"><span class="priority-icon">▮▮▯</span></td>
+                                <td class="px-4 py-3 text-sm text-gray-700">In Progress</td>
+                            </tr>
+
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3">
                                     <a href="https://linear.app/quiltair/issue/FEAT-338" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
                                         FEAT-338
                                     </a>
@@ -285,7 +304,7 @@
                                 <td class="px-4 py-3 text-sm text-gray-700">Thermals & Comfort</td>
                                 <td class="px-4 py-3">
                                     <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
-                                        other
+                                        partner success
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 26, 2025</td>
@@ -339,7 +358,7 @@
                                 <td class="px-4 py-3 text-sm text-gray-700">Device management & operation</td>
                                 <td class="px-4 py-3">
                                     <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
-                                        unlabeled
+                                        zendesk
                                     </span>
                                 </td>
                                 <td class="px-4 py-3 text-sm text-gray-500">Nov 19, 2025</td>
@@ -401,24 +420,6 @@
                                 <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
                             </tr>
 
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-3">
-                                    <a href="https://linear.app/quiltair/issue/FEAT-327" target="_blank" class="text-sm font-medium text-blue-600 hover:underline">
-                                        FEAT-327
-                                    </a>
-                                    <div class="text-sm text-gray-900 truncate max-w-md">Auto-Away behavior isn't clear and the icons are confusing</div>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-700">Auto-Away</td>
-                                <td class="px-4 py-3">
-                                    <span class="px-2 py-1 text-xs font-medium rounded bg-gray-100 text-gray-700">
-                                        unlabeled
-                                    </span>
-                                </td>
-                                <td class="px-4 py-3 text-sm text-gray-500">Nov 19, 2025</td>
-                                <td class="px-4 py-3"><span class="priority-icon">---</span></td>
-                                <td class="px-4 py-3 text-sm text-gray-700">Backlog</td>
-                            </tr>
-
                         </tbody>
                     </table>
                 </div>
@@ -433,17 +434,7 @@
                     <a href="data/customer_feedback.csv" 
                        download
                        class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition">
-                        📥 Download CSV (Customer Feedback)
-                    </a>
-                    <a href="data/statistics.json" 
-                       download
-                       class="inline-block ml-4 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition">
-                        📊 Download Statistics (JSON)
-                    </a>
-                    <a href="data.json" 
-                       download
-                       class="inline-block ml-4 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition">
-                        🗂️ Download Full Data (JSON)
+                        📥 Download CSV (All Tickets)
                     </a>
                 </div>
             </div>

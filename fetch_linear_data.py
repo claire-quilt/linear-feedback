@@ -119,12 +119,11 @@ def fetch_linear_issues():
         'Authorization': LINEAR_API_KEY
     }
     
-    # Calculate date 12 months ago (for reference only - not being used in query currently)
+    # Calculate date 12 months ago
     twelve_months_ago = datetime.now() - timedelta(days=365)
     created_after = twelve_months_ago.strftime('%Y-%m-%dT%H:%M:%S.000Z')
     
-    print(f"   📅 Current date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    print(f"   ⚠️  DEBUG MODE: Fetching ALL tickets (no date filter)")
+    print(f"   📅 Filtering to tickets created after: {twelve_months_ago.strftime('%Y-%m-%d')}")
     
     all_issues = []
     has_more = True
@@ -132,14 +131,15 @@ def fetch_linear_issues():
     page = 1
     
     while has_more:
-        # Build query with pagination - TEMPORARILY REMOVED DATE FILTER FOR DEBUGGING
+        # Build query with pagination
         query = """
-        query($teamId: String!, $after: String) {
+        query($teamId: String!, $createdAfter: DateTimeOrDuration!, $after: String) {
           team(id: $teamId) {
             id
             name
             issues(first: 250, after: $after, filter: { 
-              state: { type: { nin: ["canceled"] } }
+              state: { type: { nin: ["canceled"] } },
+              createdAt: { gte: $createdAfter }
             }) {
               nodes {
                 id
@@ -184,7 +184,8 @@ def fetch_linear_issues():
         """
         
         variables = {
-            'teamId': FEATURE_REQUESTS_TEAM_ID
+            'teamId': FEATURE_REQUESTS_TEAM_ID,
+            'createdAfter': created_after
         }
         
         if cursor:
@@ -229,29 +230,11 @@ def fetch_linear_issues():
     ]
     
     print(f"✅ Found {len(all_issues)} issues total ({len(all_issues) - len(filtered_issues)} converted epics filtered out)")
-    
-    # Debug: Show most recent 10 ticket IDs and their creation dates
-    print(f"   📋 Most recent 10 tickets:")
-    recent_sorted = sorted(all_issues, key=lambda x: x['createdAt'], reverse=True)[:10]
-    for issue in recent_sorted:
-        created = datetime.fromisoformat(issue['createdAt'].replace('Z', '+00:00'))
-        print(f"      {issue['identifier']}: {created.strftime('%Y-%m-%d %H:%M')}")
-    
-    # Debug: Check for FEAT-329
-    feat_329 = next((issue for issue in all_issues if issue['identifier'] == 'FEAT-329'), None)
-    if feat_329:
-        print(f"   ✅ FEAT-329 found in fetched issues")
-        print(f"      Status: {feat_329['state']['name']}")
-        print(f"      Created: {feat_329['createdAt']}")
-        print(f"      Labels: {[label['name'] for label in feat_329.get('labels', {}).get('nodes', [])]}")
-    else:
-        print(f"   ❌ FEAT-329 NOT found in fetched issues - it was filtered out by the API query")
-    
     return filtered_issues
 
 def get_source_label(labels):
     """Extract source label from ticket labels"""
-    source_labels = {'zendesk', 'csat', 'sales', 'partner success', 'other', 'unlabeled'}
+    source_labels = {'zendesk', 'csat', 'sales', 'partner success', 'uxr', 'other', 'unlabeled'}
     
     if not labels:
         return 'unlabeled'
@@ -270,6 +253,8 @@ def get_source_label(labels):
             return 'sales'
         elif 'partner success' in label or 'partner-success' in label:
             return 'partner success'
+        elif 'uxr' in label:
+            return 'UXR'
         elif any(keyword in label for keyword in ['email', 'phone', 'slack', 'in person', 'in-person']):
             return 'other'
     
@@ -396,13 +381,10 @@ def parse_ticket(ticket, all_issues):
     }
 
 def generate_csv(tickets, output_file='data/customer_feedback.csv'):
-    """Generate CSV file with parsed ticket data"""
+    """Generate CSV file with ALL parsed ticket data"""
     print(f"📊 Generating CSV with {len(tickets)} tickets...")
     
     os.makedirs('data', exist_ok=True)
-    
-    # Filter to only tickets with customer feedback
-    customer_tickets = [t for t in tickets if t['has_customer_feedback']]
     
     with open(output_file, 'w', newline='', encoding='utf-8') as f:
         fieldnames = [
@@ -413,14 +395,14 @@ def generate_csv(tickets, output_file='data/customer_feedback.csv'):
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         
-        for ticket in customer_tickets:
+        for ticket in tickets:
             # Remove fields not needed in CSV
             csv_ticket = {k: v for k, v in ticket.items() 
                          if k in fieldnames}
             writer.writerow(csv_ticket)
     
     print(f"✅ CSV saved to {output_file}")
-    return customer_tickets
+    return tickets
 
 def generate_json(tickets, projects, output_file='data.json'):
     """Generate JSON file for dashboard consumption"""
@@ -489,12 +471,6 @@ def generate_statistics(all_tickets):
     stats['by_feature_area'] = dict(sorted(stats['by_feature_area'].items(), 
                                            key=lambda x: x[1], reverse=True))
     
-    # Save statistics
-    os.makedirs('data', exist_ok=True)
-    with open('data/statistics.json', 'w') as f:
-        json.dump(stats, f, indent=2)
-    
-    print("✅ Statistics saved to data/statistics.json")
     return stats
 
 def generate_html_dashboard(all_tickets, stats):
@@ -508,16 +484,6 @@ def generate_html_dashboard(all_tickets, stats):
     
     # Separate customer tickets for Section 2
     customer_tickets = [t for t in all_tickets if t['has_customer_feedback']]
-    
-    # Debug: Show what we're working with
-    all_statuses = set(ticket['status'] for ticket in all_tickets)
-    print(f"🔍 Debug: All unique statuses in all tickets: {all_statuses}")
-    print(f"🔍 Debug: Total tickets: {len(all_tickets)} (customer feedback: {len(customer_tickets)})")
-    
-    # Show first 5 tickets with their statuses
-    print(f"🔍 Debug: Sample of first 5 tickets:")
-    for i, ticket in enumerate(all_tickets[:5]):
-        print(f"   {i+1}. {ticket['ticket_id']}: '{ticket['status']}' (customer: {ticket.get('has_customer_feedback', False)})")
     
     # Section 2: Filter tickets for Work in Queue (use ALL tickets, not just customer feedback)
     # Include: In Progress, Todo, In Review, and Done (if completed within last 7 days)
@@ -541,13 +507,6 @@ def generate_html_dashboard(all_tickets, stats):
                 # Skip if date parsing fails
                 pass
     
-    print(f"📋 Section 2 (Work in Queue): Found {len(priority_tickets)} tickets")
-    status_counts = {}
-    for ticket in priority_tickets:
-        status = ticket['status']
-        status_counts[status] = status_counts.get(status, 0) + 1
-    print(f"   Status breakdown: {status_counts}")
-    
     # Sort priority tickets by status order, then by updated date
     status_order = {'In Progress': 0, 'Todo': 1, 'In Review': 2, 'Done': 3}
     priority_tickets.sort(
@@ -559,9 +518,10 @@ def generate_html_dashboard(all_tickets, stats):
     
     # Section 3: Sort ALL tickets by creation date (newest first) for Recent Tickets
     recent_tickets = sorted(all_tickets, key=lambda x: x['created_at'], reverse=True)[:10]
-    print(f"📋 Section 3 (Recent Tickets): Showing {len(recent_tickets)} most recent tickets (all types)")
     
-    # Sort priority tickets by status order, then by updated date
+    print(f"📋 Sections generated: Work in Queue ({len(priority_tickets)} tickets), Recent Tickets ({len(recent_tickets)} tickets)")
+    
+    # Get all feature areas for the chart
     status_order = {'In Progress': 0, 'Todo': 1, 'In Review': 2, 'Done': 3}
     priority_tickets.sort(
         key=lambda x: (
@@ -579,7 +539,7 @@ def generate_html_dashboard(all_tickets, stats):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Linear Feature Requests Dashboard - Quilt</title>
+    <title>Quilt Customer Feedback Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
@@ -605,10 +565,10 @@ def generate_html_dashboard(all_tickets, stats):
             <!-- Header -->
             <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">
-                    Linear Feature Requests Dashboard
+                    Quilt Customer Feedback Dashboard
                 </h1>
                 <p class="text-gray-600">
-                    Automated customer feedback analysis from Feature Requests team
+                    Automated ticket analysis from Quilt's Feature Requests team in Linear
                 </p>
                 <p class="text-sm text-gray-500 mt-2">
                     Last updated: {datetime.fromisoformat(stats['last_updated'].replace('Z', '+00:00')).strftime('%B %d, %Y at %I:%M %p UTC')}
@@ -656,6 +616,7 @@ def generate_html_dashboard(all_tickets, stats):
                             <option value="CSAT">CSAT</option>
                             <option value="sales">Sales</option>
                             <option value="partner success">Partner Success</option>
+                            <option value="UXR">UXR</option>
                             <option value="other">Other</option>
                             <option value="unlabeled">Unlabeled</option>
                         </select>
@@ -814,17 +775,7 @@ def generate_html_dashboard(all_tickets, stats):
                     <a href="data/customer_feedback.csv" 
                        download
                        class="inline-block px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition">
-                        📥 Download CSV (Customer Feedback)
-                    </a>
-                    <a href="data/statistics.json" 
-                       download
-                       class="inline-block ml-4 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium transition">
-                        📊 Download Statistics (JSON)
-                    </a>
-                    <a href="data.json" 
-                       download
-                       class="inline-block ml-4 px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-medium transition">
-                        🗂️ Download Full Data (JSON)
+                        📥 Download CSV (All Tickets)
                     </a>
                 </div>
             </div>
@@ -946,23 +897,13 @@ def main():
     # Parse tickets
     parsed_tickets = [parse_ticket(t, raw_issues) for t in raw_issues]
     
-    # Debug: Check if FEAT-329 made it through parsing
-    feat_329_parsed = next((t for t in parsed_tickets if t['ticket_id'] == 'FEAT-329'), None)
-    if feat_329_parsed:
-        print(f"   ✅ FEAT-329 found in parsed tickets")
-        print(f"      Has customer feedback: {feat_329_parsed['has_customer_feedback']}")
-        print(f"      Status: {feat_329_parsed['status']}")
-        print(f"      Source label: {feat_329_parsed['source_label']}")
-    else:
-        print(f"   ❌ FEAT-329 NOT in parsed tickets")
-    
     # Filter to only tickets with customer feedback
     customer_tickets = [t for t in parsed_tickets if t['has_customer_feedback']]
     print(f"✅ Found {len(customer_tickets)} tickets with customer feedback")
     
     # Generate outputs
-    generate_csv(customer_tickets)
-    generate_json(parsed_tickets, projects)  # Include all tickets in JSON
+    generate_csv(parsed_tickets)  # Include all tickets in CSV
+    generate_json(parsed_tickets, projects)  # Keep JSON for dashboard filtering (not exposed to user)
     stats = generate_statistics(parsed_tickets)  # Pass all tickets for Section 1 stats
     generate_html_dashboard(parsed_tickets, stats)  # Pass all tickets for full dashboard
     
