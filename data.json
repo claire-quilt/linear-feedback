@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-05T09:14:44.725816",
+  "lastUpdated": "2025-12-06T09:12:36.528659",
   "projects": [
     {
       "id": "0aac74b2-ea29-4e73-96f4-b17a52dcb7e8",
@@ -88,6 +88,40 @@
   ],
   "issues": [
     {
+      "id": "FEAT-363",
+      "title": "Confusion about min ODU runtime b/c system continued running in prior mode after changing mode",
+      "url": "https://linear.app/quiltair/issue/FEAT-363",
+      "createdAt": "2025-12-05T20:30:26.891Z",
+      "updatedAt": "2025-12-05T20:30:26.891Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "No Project",
+      "featureArea": "Unknown",
+      "sourceLabel": "unlabeled",
+      "priority": "No priority",
+      "priorityValue": 0,
+      "state": "Backlog",
+      "stateType": "backlog"
+    },
+    {
+      "id": "FEAT-362",
+      "title": "Finer grain control over heat & cool behaviors in dual setpoint modes (Heat/Cool and Away)",
+      "url": "https://linear.app/quiltair/issue/FEAT-362",
+      "createdAt": "2025-12-05T19:01:44.434Z",
+      "updatedAt": "2025-12-05T19:01:44.434Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "Thermals & Comfort",
+      "featureArea": "Thermals & Comfort",
+      "sourceLabel": "unlabeled",
+      "priority": "No priority",
+      "priorityValue": 0,
+      "state": "Backlog",
+      "stateType": "backlog"
+    },
+    {
       "id": "FEAT-343",
       "title": "Batch System Invite Send / Auto-Accept",
       "url": "https://linear.app/quiltair/issue/FEAT-343",
@@ -143,7 +177,7 @@
       "title": "Design for scheduling accent light in Schedules",
       "url": "https://linear.app/quiltair/issue/FEAT-340",
       "createdAt": "2025-12-04T16:05:43.383Z",
-      "updatedAt": "2025-12-04T17:35:53.053Z",
+      "updatedAt": "2025-12-06T01:29:23.371Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
@@ -602,8 +636,8 @@
       "title": "Dial UX design - fan speed control",
       "url": "https://linear.app/quiltair/issue/FEAT-298",
       "createdAt": "2025-11-13T17:59:15.194Z",
-      "updatedAt": "2025-12-04T17:36:42.694Z",
-      "completedAt": null,
+      "updatedAt": "2025-12-06T01:27:11.729Z",
+      "completedAt": "2025-12-05T22:13:49.922Z",
       "customer": null,
       "wave": null,
       "project": "Thermals & Comfort",
@@ -611,15 +645,15 @@
       "sourceLabel": "unlabeled",
       "priority": "High",
       "priorityValue": 2,
-      "state": "Todo",
-      "stateType": "unstarted"
+      "state": "Done",
+      "stateType": "completed"
     },
     {
       "id": "FEAT-297",
       "title": "App UX design - fan speed control",
       "url": "https://linear.app/quiltair/issue/FEAT-297",
       "createdAt": "2025-11-13T17:59:10.980Z",
-      "updatedAt": "2025-12-04T17:36:31.121Z",
+      "updatedAt": "2025-12-05T22:14:33.413Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
@@ -628,15 +662,15 @@
       "sourceLabel": "unlabeled",
       "priority": "High",
       "priorityValue": 2,
-      "state": "Todo",
-      "stateType": "unstarted"
+      "state": "In Progress",
+      "stateType": "started"
     },
     {
       "id": "FEAT-296",
       "title": "\u2602\ufe0f Fan speed control",
       "url": "https://linear.app/quiltair/issue/FEAT-296",
       "createdAt": "2025-11-12T22:11:47.473Z",
-      "updatedAt": "2025-11-19T22:24:57.448Z",
+      "updatedAt": "2025-12-06T01:27:51.339Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
@@ -645,8 +679,8 @@
       "sourceLabel": "unlabeled",
       "priority": "No priority",
       "priorityValue": 0,
-      "state": "Backlog",
-      "stateType": "backlog"
+      "state": "In Progress",
+      "stateType": "started"
     },
     {
       "id": "FEAT-294",
@@ -3260,23 +3294,6 @@
       "wave": null,
       "project": "Device management & operation",
       "featureArea": "Device management & operation",
-      "sourceLabel": "unlabeled",
-      "priority": "Low",
-      "priorityValue": 4,
-      "state": "Backlog",
-      "stateType": "backlog"
-    },
-    {
-      "id": "FEAT-249",
-      "title": "Room menu is hard to use when creating schedules on Android",
-      "url": "https://linear.app/quiltair/issue/FEAT-249",
-      "createdAt": "2024-12-05T22:54:25.930Z",
-      "updatedAt": "2025-11-11T21:08:07.592Z",
-      "completedAt": null,
-      "customer": null,
-      "wave": null,
-      "project": "Schedules",
-      "featureArea": "Schedules",
       "sourceLabel": "unlabeled",
       "priority": "Low",
       "priorityValue": 4,
