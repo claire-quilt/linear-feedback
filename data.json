@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-11T09:18:48.488729",
+  "lastUpdated": "2025-12-12T09:18:16.725255",
   "projects": [
     {
       "id": "0aac74b2-ea29-4e73-96f4-b17a52dcb7e8",
@@ -3305,7 +3305,7 @@
       "title": "Add fan speed control to apps & Dial",
       "url": "https://linear.app/quiltair/issue/FEAT-233",
       "createdAt": "2024-10-29T18:34:23.859Z",
-      "updatedAt": "2025-11-15T00:21:27.676Z",
+      "updatedAt": "2025-12-12T08:25:09.505Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
