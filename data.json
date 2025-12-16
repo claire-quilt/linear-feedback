@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-15T09:24:13.651596",
+  "lastUpdated": "2025-12-16T09:19:34.131403",
   "projects": [
     {
       "id": "0aac74b2-ea29-4e73-96f4-b17a52dcb7e8",
@@ -87,6 +87,23 @@
     }
   ],
   "issues": [
+    {
+      "id": "FEAT-366",
+      "title": "Clarify indoor unit sensor behavior when remote sensors enabled",
+      "url": "https://linear.app/quiltair/issue/FEAT-366",
+      "createdAt": "2025-12-15T19:21:38.209Z",
+      "updatedAt": "2025-12-15T19:44:08.739Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "No Project",
+      "featureArea": "Unknown",
+      "sourceLabel": "unlabeled",
+      "priority": "No priority",
+      "priorityValue": 0,
+      "state": "Triage",
+      "stateType": "triage"
+    },
     {
       "id": "FEAT-365",
       "title": "Rebrand Auto-Away",
