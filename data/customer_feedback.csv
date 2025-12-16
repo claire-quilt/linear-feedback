@@ -1,4 +1,5 @@
 ticket_id,title,project,epic,epic_id,feature_area,customer,wave,source_type,source_detail,source_label,priority,quote,status,created_at,updated_at,url
+FEAT-366,Clarify indoor unit sensor behavior when remote sensors enabled,No Project,No Epic,,Unknown,,,Unknown,,unlabeled,No priority,,Triage,2025-12-15T19:21:38.209Z,2025-12-15T19:44:08.739Z,https://linear.app/quiltair/issue/FEAT-366
 FEAT-365,Rebrand Auto-Away,Auto-Away,FEAT-260: ☂️ Auto-Away pain points,FEAT-260,Auto-Away,,,Unknown,,unlabeled,No priority,,Backlog,2025-12-10T19:17:54.810Z,2025-12-10T19:17:55.100Z,https://linear.app/quiltair/issue/FEAT-365
 FEAT-364,[Placeholder] Proximity-based behaviors on Dial,All things Dial,No Epic,,All things Dial,,,Unknown,,unlabeled,No priority,,Backlog,2025-12-10T19:14:36.014Z,2025-12-10T19:14:36.014Z,https://linear.app/quiltair/issue/FEAT-364
 FEAT-363,Confusion about min ODU runtime b/c system continued running in prior mode after changing mode,No Project,No Epic,,Unknown,,,Unknown,,unlabeled,No priority,,Backlog,2025-12-05T20:30:26.891Z,2025-12-05T20:30:26.891Z,https://linear.app/quiltair/issue/FEAT-363
