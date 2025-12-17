@@ -1,6 +1,12 @@
 {
-  "lastUpdated": "2025-12-16T09:19:34.131403",
+  "lastUpdated": "2025-12-17T09:20:33.493864",
   "projects": [
+    {
+      "id": "1971e465-a6e0-4f1f-9821-18374995c8aa",
+      "name": "Temp Sensing 2025",
+      "description": "",
+      "icon": ":thermometer:"
+    },
     {
       "id": "0aac74b2-ea29-4e73-96f4-b17a52dcb7e8",
       "name": "Device management & operation",
@@ -87,6 +93,40 @@
     }
   ],
   "issues": [
+    {
+      "id": "FEAT-367",
+      "title": "Suggest weatherization improvements to consumer when Quilt detects large temp differences to save energy",
+      "url": "https://linear.app/quiltair/issue/FEAT-367",
+      "createdAt": "2025-12-16T21:43:17.061Z",
+      "updatedAt": "2025-12-16T21:44:57.858Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "Thermals & Comfort",
+      "featureArea": "Thermals & Comfort",
+      "sourceLabel": "unlabeled",
+      "priority": "Urgent",
+      "priorityValue": 1,
+      "state": "Backlog",
+      "stateType": "backlog"
+    },
+    {
+      "id": "FEAT-368",
+      "title": "Enable customers to configure the safety heating temperature threshold",
+      "url": "https://linear.app/quiltair/issue/FEAT-368",
+      "createdAt": "2025-12-16T21:01:19.303Z",
+      "updatedAt": "2025-12-17T02:10:13.664Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "Temp Sensing 2025",
+      "featureArea": "Temp Sensing 2025",
+      "sourceLabel": "unlabeled",
+      "priority": "High",
+      "priorityValue": 2,
+      "state": "Backlog",
+      "stateType": "backlog"
+    },
     {
       "id": "FEAT-366",
       "title": "Clarify indoor unit sensor behavior when remote sensors enabled",
