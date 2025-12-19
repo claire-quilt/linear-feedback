@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-18T09:19:35.874951",
+  "lastUpdated": "2025-12-19T09:17:14.829901",
   "projects": [
     {
       "id": "1971e465-a6e0-4f1f-9821-18374995c8aa",
@@ -166,7 +166,7 @@
       "title": "Enable customers to configure the safety heating temperature threshold",
       "url": "https://linear.app/quiltair/issue/FEAT-368",
       "createdAt": "2025-12-16T21:01:19.303Z",
-      "updatedAt": "2025-12-17T02:10:13.664Z",
+      "updatedAt": "2025-12-18T16:57:11.301Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
@@ -175,15 +175,15 @@
       "sourceLabel": "unlabeled",
       "priority": "High",
       "priorityValue": 2,
-      "state": "Backlog",
-      "stateType": "backlog"
+      "state": "In Progress",
+      "stateType": "started"
     },
     {
       "id": "FEAT-366",
       "title": "Clarify indoor unit sensor behavior when remote sensors enabled",
       "url": "https://linear.app/quiltair/issue/FEAT-366",
       "createdAt": "2025-12-15T19:21:38.209Z",
-      "updatedAt": "2025-12-17T23:54:23.562Z",
+      "updatedAt": "2025-12-18T16:57:45.386Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
@@ -192,8 +192,8 @@
       "sourceLabel": "unlabeled",
       "priority": "High",
       "priorityValue": 2,
-      "state": "Todo",
-      "stateType": "unstarted"
+      "state": "In Progress",
+      "stateType": "started"
     },
     {
       "id": "FEAT-365",
