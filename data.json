@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-23T09:18:24.473107",
+  "lastUpdated": "2025-12-24T09:18:01.767456",
   "projects": [
     {
       "id": "6f7856c8-6826-4bf8-9258-1306484f0521",
@@ -2450,7 +2450,7 @@
       "title": "Assumed Auto-Away was geo-location based (misunderstanding)",
       "url": "https://linear.app/quiltair/issue/FEAT-95",
       "createdAt": "2025-11-06T02:50:13.148Z",
-      "updatedAt": "2025-12-04T15:45:50.241Z",
+      "updatedAt": "2025-12-23T19:57:56.823Z",
       "completedAt": null,
       "customer": "Phil Lee",
       "wave": "Wave 2",
