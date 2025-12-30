@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-29T09:22:38.824472",
+  "lastUpdated": "2025-12-30T09:18:09.958080",
   "projects": [
     {
       "id": "6f7856c8-6826-4bf8-9258-1306484f0521",
@@ -1039,7 +1039,7 @@
       "title": "\u2602\ufe0f Fan speed requests",
       "url": "https://linear.app/quiltair/issue/FEAT-296",
       "createdAt": "2025-11-12T22:11:47.473Z",
-      "updatedAt": "2025-12-22T23:51:42.747Z",
+      "updatedAt": "2025-12-30T00:24:07.958Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
