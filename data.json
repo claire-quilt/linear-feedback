@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2025-12-30T09:18:09.958080",
+  "lastUpdated": "2025-12-31T09:17:22.914440",
   "projects": [
     {
       "id": "6f7856c8-6826-4bf8-9258-1306484f0521",
@@ -3527,23 +3527,6 @@
       "wave": null,
       "project": "All things Dial",
       "featureArea": "All things Dial",
-      "sourceLabel": "unlabeled",
-      "priority": "Medium",
-      "priorityValue": 3,
-      "state": "Backlog",
-      "stateType": "backlog"
-    },
-    {
-      "id": "FEAT-240",
-      "title": "Add speed bump for un-saved schedule",
-      "url": "https://linear.app/quiltair/issue/FEAT-240",
-      "createdAt": "2024-12-30T20:32:25.489Z",
-      "updatedAt": "2025-12-22T23:26:30.537Z",
-      "completedAt": null,
-      "customer": null,
-      "wave": null,
-      "project": "Schedules",
-      "featureArea": "Schedules",
       "sourceLabel": "unlabeled",
       "priority": "Medium",
       "priorityValue": 3,
