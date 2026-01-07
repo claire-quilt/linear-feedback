@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-06T09:19:38.322915",
+  "lastUpdated": "2026-01-07T09:21:19.112554",
   "projects": [
     {
       "id": "6f7856c8-6826-4bf8-9258-1306484f0521",
@@ -1107,7 +1107,7 @@
       "title": "Light fade transition and low brightness UX",
       "url": "https://linear.app/quiltair/issue/FEAT-287",
       "createdAt": "2025-11-07T17:35:01.839Z",
-      "updatedAt": "2025-12-23T02:04:01.047Z",
+      "updatedAt": "2026-01-07T01:31:37.158Z",
       "completedAt": null,
       "customer": "Matt Harris",
       "wave": "Wave 2",
@@ -3368,7 +3368,7 @@
       "title": "Night light mode (motion-activated lighting)",
       "url": "https://linear.app/quiltair/issue/FEAT-2",
       "createdAt": "2025-03-13T23:58:33.662Z",
-      "updatedAt": "2025-12-23T02:04:01.047Z",
+      "updatedAt": "2026-01-07T00:44:05.359Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
@@ -3509,23 +3509,6 @@
       "customer": "Girish",
       "wave": null,
       "project": "Thermals & Comfort",
-      "featureArea": "All things Dial",
-      "sourceLabel": "unlabeled",
-      "priority": "Medium",
-      "priorityValue": 3,
-      "state": "Backlog",
-      "stateType": "backlog"
-    },
-    {
-      "id": "FEAT-215",
-      "title": "Add animation to Dial screen to avoid burn-in",
-      "url": "https://linear.app/quiltair/issue/FEAT-215",
-      "createdAt": "2025-01-07T04:38:40.505Z",
-      "updatedAt": "2025-12-22T23:22:09.628Z",
-      "completedAt": null,
-      "customer": null,
-      "wave": null,
-      "project": "All things Dial",
       "featureArea": "All things Dial",
       "sourceLabel": "unlabeled",
       "priority": "Medium",
