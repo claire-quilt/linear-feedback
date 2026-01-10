@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-09T09:21:01.147579",
+  "lastUpdated": "2026-01-10T09:13:41.676622",
   "projects": [
     {
       "id": "6f7856c8-6826-4bf8-9258-1306484f0521",
@@ -240,7 +240,7 @@
       "title": "Consumer UX improvements for temp sensing",
       "url": "https://linear.app/quiltair/issue/FEAT-378",
       "createdAt": "2025-12-22T23:35:03.205Z",
-      "updatedAt": "2026-01-06T00:06:56.526Z",
+      "updatedAt": "2026-01-09T17:20:29.172Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
@@ -257,7 +257,7 @@
       "title": "Display temperature sensors in room view (not just settings)",
       "url": "https://linear.app/quiltair/issue/FEAT-379",
       "createdAt": "2025-12-22T23:35:03.205Z",
-      "updatedAt": "2026-01-06T00:04:30.269Z",
+      "updatedAt": "2026-01-09T17:01:30.037Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
@@ -3494,23 +3494,6 @@
       "project": "Thermals & Comfort",
       "featureArea": "All things Dial",
       "sourceLabel": "other",
-      "priority": "Medium",
-      "priorityValue": 3,
-      "state": "Backlog",
-      "stateType": "backlog"
-    },
-    {
-      "id": "FEAT-29",
-      "title": "Indoor unit continues blowing warm air after reaching setpoint",
-      "url": "https://linear.app/quiltair/issue/FEAT-29",
-      "createdAt": "2025-01-09T22:29:19.431Z",
-      "updatedAt": "2025-12-22T23:39:25.654Z",
-      "completedAt": null,
-      "customer": "Girish",
-      "wave": null,
-      "project": "Thermals & Comfort",
-      "featureArea": "All things Dial",
-      "sourceLabel": "unlabeled",
       "priority": "Medium",
       "priorityValue": 3,
       "state": "Backlog",
