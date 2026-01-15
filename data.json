@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-14T09:21:55.972456",
+  "lastUpdated": "2026-01-15T09:20:57.972193",
   "projects": [
     {
       "id": "6f7856c8-6826-4bf8-9258-1306484f0521",
@@ -99,6 +99,23 @@
     }
   ],
   "issues": [
+    {
+      "id": "FEAT-389",
+      "title": "Notifs & alerts system design",
+      "url": "https://linear.app/quiltair/issue/FEAT-389",
+      "createdAt": "2026-01-14T18:40:49.339Z",
+      "updatedAt": "2026-01-14T18:41:05.369Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "All things App",
+      "featureArea": "All things App",
+      "sourceLabel": "unlabeled",
+      "priority": "Low",
+      "priorityValue": 4,
+      "state": "Todo",
+      "stateType": "unstarted"
+    },
     {
       "id": "FEAT-387",
       "title": "Maintenance alerts",
@@ -3479,23 +3496,6 @@
       "sourceLabel": "other",
       "priority": "Low",
       "priorityValue": 4,
-      "state": "Backlog",
-      "stateType": "backlog"
-    },
-    {
-      "id": "FEAT-44",
-      "title": "Proactive conditioning in anticipation of oil return",
-      "url": "https://linear.app/quiltair/issue/FEAT-44",
-      "createdAt": "2025-01-14T19:58:06.086Z",
-      "updatedAt": "2025-12-22T23:39:25.701Z",
-      "completedAt": null,
-      "customer": null,
-      "wave": null,
-      "project": "Thermals & Comfort",
-      "featureArea": "All things Dial",
-      "sourceLabel": "other",
-      "priority": "Medium",
-      "priorityValue": 3,
       "state": "Backlog",
       "stateType": "backlog"
     },
