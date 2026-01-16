@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-01-15T09:20:57.972193",
+  "lastUpdated": "2026-01-16T09:19:25.527776",
   "projects": [
     {
       "id": "6f7856c8-6826-4bf8-9258-1306484f0521",
@@ -3294,6 +3294,23 @@
       "priorityValue": 3,
       "state": "Backlog",
       "stateType": "backlog"
+    },
+    {
+      "id": "FEAT-390",
+      "title": "Layer eco (smarts) features into kWh reporting on System Tab",
+      "url": "https://linear.app/quiltair/issue/FEAT-390",
+      "createdAt": "2025-03-27T23:54:06.968Z",
+      "updatedAt": "2026-01-16T01:16:37.682Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "No Project",
+      "featureArea": "Unknown",
+      "sourceLabel": "unlabeled",
+      "priority": "No priority",
+      "priorityValue": 0,
+      "state": "Todo",
+      "stateType": "unstarted"
     },
     {
       "id": "FEAT-46",
