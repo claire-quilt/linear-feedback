@@ -1,6 +1,12 @@
 {
-  "lastUpdated": "2026-01-16T09:19:25.527776",
+  "lastUpdated": "2026-01-17T09:13:29.134949",
   "projects": [
+    {
+      "id": "657dabeb-6df3-475f-83f7-d71de329be78",
+      "name": "Commissioning Checks",
+      "description": "DRAFT PROJECT",
+      "icon": "Checklist"
+    },
     {
       "id": "6f7856c8-6826-4bf8-9258-1306484f0521",
       "name": "Hotels UX",
@@ -99,6 +105,23 @@
     }
   ],
   "issues": [
+    {
+      "id": "FEAT-391",
+      "title": "Would like to set thermostat below 61 in heating mode",
+      "url": "https://linear.app/quiltair/issue/FEAT-391",
+      "createdAt": "2026-01-16T16:49:16.968Z",
+      "updatedAt": "2026-01-16T23:10:31.297Z",
+      "completedAt": null,
+      "customer": null,
+      "wave": null,
+      "project": "Thermals & Comfort",
+      "featureArea": "Modes & Controls",
+      "sourceLabel": "unlabeled",
+      "priority": "Low",
+      "priorityValue": 4,
+      "state": "Backlog",
+      "stateType": "backlog"
+    },
     {
       "id": "FEAT-389",
       "title": "Notifs & alerts system design",
@@ -546,7 +569,7 @@
       "title": "Lower min temperature in heating mode (<61) requests",
       "url": "https://linear.app/quiltair/issue/FEAT-342",
       "createdAt": "2025-12-04T18:41:51.716Z",
-      "updatedAt": "2025-12-23T00:46:43.908Z",
+      "updatedAt": "2026-01-16T23:10:13.872Z",
       "completedAt": null,
       "customer": null,
       "wave": null,
@@ -3496,23 +3519,6 @@
       "sourceLabel": "other",
       "priority": "No priority",
       "priorityValue": 0,
-      "state": "Backlog",
-      "stateType": "backlog"
-    },
-    {
-      "id": "FEAT-43",
-      "title": "Safe Mode vs Safety Temperatures naming confusion",
-      "url": "https://linear.app/quiltair/issue/FEAT-43",
-      "createdAt": "2025-01-17T00:35:16.414Z",
-      "updatedAt": "2025-12-04T16:01:41.022Z",
-      "completedAt": null,
-      "customer": "Erin Reynolds",
-      "wave": null,
-      "project": "Thermals & Comfort",
-      "featureArea": "Modes & Controls",
-      "sourceLabel": "other",
-      "priority": "Low",
-      "priorityValue": 4,
       "state": "Backlog",
       "stateType": "backlog"
     },
